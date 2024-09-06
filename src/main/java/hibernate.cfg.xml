@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE hibernate-configuration PUBLIC "-//Hibernate/Hibernate Configuration DTD 3.0//EN"
+                                         "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
+<hibernate-configuration>
+ <session-factory name="">
+  <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+  <property name="hibernate.connection.url">jdbc:sqlserver://localhost:1433;databaseName=DB_APP_STORY</property>
+  <property name="hibernate.connection.username">sa</property>
+  <property name="hibernate.connection.password">Password.1</property>
+  <property name="hibernate.dialect">org.hibernate.dialect.SQLServer2012Dialect</property>
+  <property name="hibernate.show_sql">true</property>
+  <mapping class="service_btl.entities.Author"/>
+  <mapping class="service_btl.entities.Account"/>
+  <mapping class="service_btl.entities.Category"/>
+  <mapping class="service_btl.entities.Chapter"/>
+  <mapping class="service_btl.entities.Comment"/>
+  <mapping class="service_btl.entities.Favorite"/>
+  <mapping class="service_btl.entities.Story"/>
+  <mapping class="service_btl.entities.View"/>
+ </session-factory>
+</hibernate-configuration>
