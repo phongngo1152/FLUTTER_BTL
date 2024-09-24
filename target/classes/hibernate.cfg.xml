@@ -4,7 +4,7 @@
 <hibernate-configuration>
  <session-factory name="">
   <property name="hibernate.connection.driver_class">com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
-  <property name="hibernate.connection.url">jdbc:sqlserver://localhost:1433;databaseName=DB_APP_STORY</property>
+  <property name="hibernate.connection.url">jdbc:sqlserver://localhost:1433;databaseName=DB_APP_STORYY</property>
   <property name="hibernate.connection.username">sa</property>
   <property name="hibernate.connection.password">Password.1</property>
   <property name="hibernate.dialect">org.hibernate.dialect.SQLServer2012Dialect</property>

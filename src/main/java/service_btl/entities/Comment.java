@@ -1,6 +1,7 @@
 package service_btl.entities;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -33,24 +34,25 @@ public class Comment {
     @JoinColumn(name = "chapterId", referencedColumnName = "chapterId")
     private Chapter chapter;
 
-    @Column(name = "content", nullable = false)
+    @Column(name = "content")
     private String content;
 
-    @Column(name = "create_at", nullable = false)
-    private LocalDateTime createAt;
+    @Column(name = "create_at")
+    private Date createAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private Date updateAt;
 
-    @Column(name = "status", nullable = false)
-    private int status;
+    
+    @Column(name = "status")
+    private Integer status;
 
     // Default constructor
     public Comment() {}
 
     // Constructor with all fields
     public Comment(Integer commentId, Account account, Story story, Chapter chapter, String content,
-                   LocalDateTime createAt, LocalDateTime updateAt, int status) {
+    		Date createAt, Date updateAt, Integer status) {
         this.commentId = commentId;
         this.account = account;
         this.story = story;
@@ -77,12 +79,12 @@ public class Comment {
     public String getContent() { return content; }
     public void setContent(String content) { this.content = content; }
 
-    public LocalDateTime getCreateAt() { return createAt; }
-    public void setCreateAt(LocalDateTime createAt) { this.createAt = createAt; }
+    public Date getCreateAt() { return createAt; }
+    public void setCreateAt(Date createAt) { this.createAt = createAt; }
 
-    public LocalDateTime getUpdateAt() { return updateAt; }
-    public void setUpdateAt(LocalDateTime updateAt) { this.updateAt = updateAt; }
+    public Date getUpdateAt() { return updateAt; }
+    public void setUpdateAt(Date updateAt) { this.updateAt = updateAt; }
 
-    public int getStatus() { return status; }
-    public void setStatus(int status) { this.status = status; }
+    public Integer getStatus() { return status; }
+    public void setStatus(Integer status) { this.status = status; }
 }

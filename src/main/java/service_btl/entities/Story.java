@@ -2,6 +2,7 @@ package service_btl.entities;
 
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -25,17 +26,17 @@ public class Story {
     @Column(name = "title")
     private String title;
 
-    @Column(name = "summary")
-    private String summary;
+    @Column(name = "description")
+    private String description;
 
-    @Column(name = "content")
-    private String content;
+    @Column(name = "coverImage")
+    private String coverImage;
 
     @Column(name = "create_at")
-    private LocalDateTime createAt;
+    private Date createAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private Date updateAt;
 
     @Column(name = "status")
     private Boolean status;
@@ -45,15 +46,15 @@ public class Story {
     private Author author;
 
     @ManyToOne
-    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId", nullable = false)
+    @JoinColumn(name = "categoryId", referencedColumnName = "categoryId")
     private Category category;
-    @OneToMany(mappedBy = "Stories")
+    @OneToMany(mappedBy = "story")
     private Set<Chapter> chapters;
 
-    @OneToMany(mappedBy = "Stories")
+    @OneToMany(mappedBy = "story")
     private Set<Comment> comments;
 
-    @OneToMany(mappedBy = "Stories")
+    @OneToMany(mappedBy = "story")
     private Set<View> views;
 
     // Default Constructor
@@ -62,13 +63,13 @@ public class Story {
     }
 
     // Parameterized Constructor
-    public Story(Integer storyId, String title, String summary, String content, LocalDateTime createAt,
-                 LocalDateTime updateAt, Boolean status, Author author, Set<Chapter> chapters, 
+    public Story(Integer storyId, String title, String description, String coverImage, Date createAt,
+    		Date updateAt, Boolean status, Author author, Set<Chapter> chapters, 
                  Set<Comment> comments, Set<View> views) {
         this.storyId = storyId;
         this.title = title;
-        this.summary = summary;
-        this.content = content;
+        this.description = description;
+        this.coverImage = coverImage;
         this.createAt = createAt;
         this.updateAt = updateAt;
         this.status = status;
@@ -95,35 +96,35 @@ public class Story {
         this.title = title;
     }
 
-    public String getSummary() {
-        return summary;
+    public String getDescription() {
+        return description;
     }
 
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public String getContent() {
-        return content;
+    public String getCoverImage() {
+        return coverImage;
     }
 
-    public void setContent(String content) {
-        this.content = content;
+    public void setCoverImage(String coverImage) {
+        this.coverImage = coverImage;
     }
 
-    public LocalDateTime getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 
-    public LocalDateTime getUpdateAt() {
+    public Date getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
+    public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
     }
 

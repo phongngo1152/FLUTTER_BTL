@@ -1,4 +1,4 @@
-package service_btl.entities.hibernate.util;
+package service_btl.hibernate.util;
 
 import org.hibernate.SessionFactory;
 import org.hibernate.boot.Metadata;

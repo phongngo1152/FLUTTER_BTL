@@ -1,6 +1,7 @@
 package service_btl.entities;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -27,13 +28,13 @@ public class Author {
     private String bio;
 
     @Column(name = "create_at")
-    private LocalDateTime createAt;
+    private Date createAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private Date updateAt;
 
     @Column(name = "status")
-    private int status;
+    private Integer status;
 
     @OneToMany(mappedBy = "author",fetch = FetchType.EAGER)
     private Set<Story> stories;
@@ -41,8 +42,16 @@ public class Author {
     public Author() {
         super();
     }
-
-    public Author(Integer authorId, String name, String bio, LocalDateTime createAt, LocalDateTime updateAt, int status, Set<Story> stories) {
+    public Author(Integer authorId, String name, String bio, Date createAt, Date updateAt, int status) {
+        this.authorId = authorId;
+        this.name = name;
+        this.bio = bio;
+        this.createAt = createAt;
+        this.updateAt = updateAt;
+        this.status = status;
+       
+    }
+    public Author(Integer authorId, String name, String bio, Date createAt, Date updateAt, Integer status, Set<Story> stories) {
         super();
         this.authorId = authorId;
         this.name = name;
@@ -78,27 +87,27 @@ public class Author {
         this.bio = bio;
     }
 
-    public LocalDateTime getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 
-    public LocalDateTime getUpdateAt() {
+    public Date getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
+    public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 

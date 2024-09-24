@@ -1,5 +1,6 @@
 package service_btl.entities;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -28,22 +29,22 @@ public class Account {
     private String password;
 
     @Column(name = "role")
-    private int role;
+    private Integer role;
 
     @Column(name = "create_at")
-    private LocalDateTime createAt;
+    private Date  createAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private Date updateAt;
 
     @Column(name = "status")
-    private int status;
+    private Integer status;
 
     public Account() {
         super();
     }
 
-    public Account(Integer acId, String userName, String email, String password, int role, LocalDateTime createAt, LocalDateTime updateAt, int status) {
+    public Account(Integer acId, String userName, String email, String password, Integer role, Date createAt, Date updateAt, Integer status) {
         super();
         this.acId = acId;
         this.userName = userName;
@@ -88,35 +89,35 @@ public class Account {
         this.password = password;
     }
 
-    public int getRole() {
+    public Integer getRole() {
         return role;
     }
 
-    public void setRole(int role) {
+    public void setRole(Integer role) {
         this.role = role;
     }
 
-    public LocalDateTime getCreateAt() {
+    public Date getCreateAt() {
         return createAt;
     }
 
-    public void setCreateAt(LocalDateTime createAt) {
+    public void setCreateAt(Date createAt) {
         this.createAt = createAt;
     }
 
-    public LocalDateTime getUpdateAt() {
+    public Date getUpdateAt() {
         return updateAt;
     }
 
-    public void setUpdateAt(LocalDateTime updateAt) {
+    public void setUpdateAt(Date updateAt) {
         this.updateAt = updateAt;
     }
 
-    public int getStatus() {
+    public Integer getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(Integer status) {
         this.status = status;
     }
 }

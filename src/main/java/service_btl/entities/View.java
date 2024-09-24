@@ -1,6 +1,7 @@
 package service_btl.entities;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -34,24 +35,24 @@ public class View {
 	private Chapter chapter;
 
 	@Column(name = "viewed_at")
-	private LocalDateTime viewedAt;
+	private Date viewedAt;
 
 	@Column(name = "create_at")
-	private LocalDateTime createAt;
+	private Date createAt;
 
 	@Column(name = "update_at")
-	private LocalDateTime updateAt;
+	private Date updateAt;
 
 	@Column(name = "status")
-	private int status;
+	private Integer status;
 
 	// Default constructor
 	public View() {
 	}
 
 	// Constructor with all fields
-	public View(Integer viewId, Account account, Story story, Chapter chapter, LocalDateTime viewedAt,
-			LocalDateTime createAt, LocalDateTime updateAt, int status) {
+	public View(Integer viewId, Account account, Story story, Chapter chapter, Date viewedAt,
+			Date createAt, Date updateAt, Integer status) {
 		this.viewId = viewId;
 		this.account = account;
 		this.story = story;
@@ -95,35 +96,35 @@ public class View {
 		this.chapter = chapter;
 	}
 
-	public LocalDateTime getViewedAt() {
+	public Date getViewedAt() {
 		return viewedAt;
 	}
 
-	public void setViewedAt(LocalDateTime viewedAt) {
+	public void setViewedAt(Date viewedAt) {
 		this.viewedAt = viewedAt;
 	}
 
-	public LocalDateTime getCreateAt() {
+	public Date getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(LocalDateTime createAt) {
+	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
 
-	public LocalDateTime getUpdateAt() {
+	public Date getUpdateAt() {
 		return updateAt;
 	}
 
-	public void setUpdateAt(LocalDateTime updateAt) {
+	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 }

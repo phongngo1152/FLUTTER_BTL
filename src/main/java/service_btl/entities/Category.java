@@ -1,6 +1,7 @@
 package service_btl.entities;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -21,20 +22,20 @@ public class Category {
     @Column(name = "categoryId")
     private Integer categoryId;
 
-    @Column(name = "name", nullable = false, unique = true)
+    @Column(name = "name")
     private String name;
 
-    @Column(name = "description", nullable = false)
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "create_at", nullable = false)
-    private LocalDateTime createAt;
+    @Column(name = "create_at")
+    private Date createAt;
 
     @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    private Date updateAt;
 
-    @Column(name = "status", nullable = false)
-    private int status;
+    @Column(name = "status")
+    private Integer status;
 
     @OneToMany(mappedBy = "category")
     private Set<Story> stories;
@@ -43,7 +44,7 @@ public class Category {
     public Category() {}
 
     // Constructor with all fields
-    public Category(Integer categoryId, String name, String description, LocalDateTime createAt, LocalDateTime updateAt, int status) {
+    public Category(Integer categoryId, String name, String description, Date createAt, Date updateAt, int status) {
         this.categoryId = categoryId;
         this.name = name;
         this.description = description;
@@ -62,15 +63,15 @@ public class Category {
     public String getDescription() { return description; }
     public void setDescription(String description) { this.description = description; }
 
-    public LocalDateTime getCreateAt() { return createAt; }
-    public void setCreateAt(LocalDateTime createAt) { this.createAt = createAt; }
+    public Date getCreateAt() { return createAt; }
+    public void setCreateAt(Date createAt) { this.createAt = createAt; }
 
-    public LocalDateTime getUpdateAt() { return updateAt; }
-    public void setUpdateAt(LocalDateTime updateAt) { this.updateAt = updateAt; }
+    public Date getUpdateAt() { return updateAt; }
+    public void setUpdateAt(Date updateAt) { this.updateAt = updateAt; }
 
-    public int getStatus() { return status; }
+    public Integer getStatus() { return status; }
 
-	public void setStatus(int status) { this.status = status; }
+	public void setStatus(Integer status) { this.status = status; }
 
     public Set<Story> getStories() { return stories; }
     public void setStories(Set<Story> stories) { this.stories = stories; }

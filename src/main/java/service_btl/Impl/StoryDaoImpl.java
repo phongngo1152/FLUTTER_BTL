@@ -1,5 +1,5 @@
 package service_btl.Impl;
 
-public class AccountImpl {
+public class StoryDaoImpl {
 
 }

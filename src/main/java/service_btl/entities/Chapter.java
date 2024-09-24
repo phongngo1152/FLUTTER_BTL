@@ -1,6 +1,7 @@
 package service_btl.entities;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -31,13 +32,13 @@ public class Chapter {
 	private Integer chapterNumber;
 
 	@Column(name = "create_at")
-	private LocalDateTime createAt;
+	private Date createAt;
 
 	@Column(name = "update_at")
-	private LocalDateTime updateAt;
+	private Date updateAt;
 
 	@Column(name = "status")
-	private int status;
+	private Integer status;
 
 	@ManyToOne
 	@JoinColumn(name = "storyId", referencedColumnName = "storyId")
@@ -50,7 +51,7 @@ public class Chapter {
 
 	// Parameterized Constructor
 	public Chapter(Integer chapterId, Story story, String chapterTitle, String content, Integer chapterNumber,
-			LocalDateTime createAt, LocalDateTime updateAt, int status) {
+			Date createAt, Date updateAt, Integer status) {
 		this.chapterId = chapterId;
 		this.story = story;
 		this.chapterTitle = chapterTitle;
@@ -94,27 +95,27 @@ public class Chapter {
 		this.content = content;
 	}
 
-	public LocalDateTime getCreateAt() {
+	public Date getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(LocalDateTime createAt) {
+	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
 
-	public LocalDateTime getUpdateAt() {
+	public Date getUpdateAt() {
 		return updateAt;
 	}
 
-	public void setUpdateAt(LocalDateTime updateAt) {
+	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 

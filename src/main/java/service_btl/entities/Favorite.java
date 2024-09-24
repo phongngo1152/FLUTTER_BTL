@@ -1,6 +1,7 @@
 package service_btl.entities;
 
 import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.Set;
 
 import javax.persistence.Column;
@@ -28,13 +29,13 @@ public class Favorite {
 	@JoinColumn(name = "storyId", referencedColumnName = "storyId")
 	private Story story;
 
-	@Column(name = "create_at", nullable = false)
-	private LocalDateTime createAt;
+	@Column(name = "create_at")
+	private Date createAt;
 
 	@Column(name = "update_at")
-	private LocalDateTime updateAt;
+	private Date updateAt;
 
-	@Column(name = "status", nullable = false)
+	@Column(name = "status")
 	private int status;
 
 	// Default constructor
@@ -42,8 +43,8 @@ public class Favorite {
 	}
 
 	// Constructor with all fields
-	public Favorite(Integer favoriteId, Account account, Story story, LocalDateTime createAt, LocalDateTime updateAt,
-			int status) {
+	public Favorite(Integer favoriteId, Account account, Story story, Date createAt, Date updateAt,
+			Integer status) {
 		this.favoriteId = favoriteId;
 		this.account = account;
 		this.story = story;
@@ -77,27 +78,27 @@ public class Favorite {
 		this.story = story;
 	}
 
-	public LocalDateTime getCreateAt() {
+	public Date getCreateAt() {
 		return createAt;
 	}
 
-	public void setCreateAt(LocalDateTime createAt) {
+	public void setCreateAt(Date createAt) {
 		this.createAt = createAt;
 	}
 
-	public LocalDateTime getUpdateAt() {
+	public Date getUpdateAt() {
 		return updateAt;
 	}
 
-	public void setUpdateAt(LocalDateTime updateAt) {
+	public void setUpdateAt(Date updateAt) {
 		this.updateAt = updateAt;
 	}
 
-	public int getStatus() {
+	public Integer getStatus() {
 		return status;
 	}
 
-	public void setStatus(int status) {
+	public void setStatus(Integer status) {
 		this.status = status;
 	}
 }
