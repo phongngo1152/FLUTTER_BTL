@@ -14,24 +14,24 @@ public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
 	public List<Author> getAllAuthor() {
-		 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	        Session session = sessionFactory.openSession();
-	        try {
-	            session.beginTransaction();
-	            List list = session.createQuery("from Author").list();
-	            session.getTransaction().commit();
-	            return list;
-	        } catch (Exception e) {
-	            // TODO: handle exception
-	        	System.out.println("Loi bat dau tu day");
-	            e.printStackTrace();
-	            
-	            session.getTransaction().rollback();
-	        }finally {
-	            session.close();
-	        }
-	        return null;
-		
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List list = session.createQuery("from Author").list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi bat dau tu day");
+			e.printStackTrace();
+
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+
 	}
 
 	@Override
@@ -43,27 +43,27 @@ public class AuthorDaoImpl implements AuthorDao {
 	@Override
 	public boolean insertAuthor(Author author) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            session.save(author);
-            session.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            // TODO: handle exception
-        	System.out.println("Loi bat dau tu day");
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        }finally {
-            session.close();
-        }
-        return false;
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			session.save(author);
+			session.getTransaction().commit();
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi bat dau tu day");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return false;
 	}
 
 	@Override
 	public boolean updateAuthor(Author author) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 
 		try {
 			session.beginTransaction();
@@ -71,10 +71,10 @@ public class AuthorDaoImpl implements AuthorDao {
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return false;
@@ -88,10 +88,10 @@ public class AuthorDaoImpl implements AuthorDao {
 			Author author = session.get(Author.class, AuthorId);
 			return author;
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return null;
@@ -102,17 +102,17 @@ public class AuthorDaoImpl implements AuthorDao {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
-				session.beginTransaction();
-				session.delete(findByAuthorId(id));
-				session.getTransaction().commit();
-				return true;
-			
+			session.beginTransaction();
+			session.delete(findByAuthorId(id));
+			session.getTransaction().commit();
+			return true;
+
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return false;

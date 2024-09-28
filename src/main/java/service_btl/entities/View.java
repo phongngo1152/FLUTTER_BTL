@@ -51,8 +51,8 @@ public class View {
 	}
 
 	// Constructor with all fields
-	public View(Integer viewId, Account account, Story story, Chapter chapter, Date viewedAt,
-			Date createAt, Date updateAt, Integer status) {
+	public View(Integer viewId, Account account, Story story, Chapter chapter, Date viewedAt, Date createAt,
+			Date updateAt, Integer status) {
 		this.viewId = viewId;
 		this.account = account;
 		this.story = story;

@@ -9,27 +9,27 @@ import service_btl.Dao.AccountDao;
 import service_btl.entities.Account;
 import service_btl.hibernate.util.HibernateUtil;
 
-public class AccountDaoImpl implements AccountDao{
+public class AccountDaoImpl implements AccountDao {
 
 	@Override
 	public List<Account> getAllUser() {
-		 SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	        Session session = sessionFactory.openSession();
-	        try {
-	            session.beginTransaction();
-	            List list = session.createQuery("from Account").list();
-	            session.getTransaction().commit();
-	            return list;
-	        } catch (Exception e) {
-	            // TODO: handle exception
-	        	System.out.println("Loi bat dau tu day");
-	            e.printStackTrace();
-	            
-	            session.getTransaction().rollback();
-	        }finally {
-	            session.close();
-	        }
-	        return null;
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List list = session.createQuery("from Account").list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi bat dau tu day");
+			e.printStackTrace();
+
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
@@ -41,27 +41,27 @@ public class AccountDaoImpl implements AccountDao{
 	@Override
 	public boolean insertUser(Account account) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            session.save(account);
-            session.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            // TODO: handle exception
-        	System.out.println("Loi bat dau tu day");
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        }finally {
-            session.close();
-        }
-        return false;
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			session.save(account);
+			session.getTransaction().commit();
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi bat dau tu day");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return false;
 	}
 
 	@Override
 	public boolean updateser(Account account) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 
 		try {
 			session.beginTransaction();
@@ -69,10 +69,10 @@ public class AccountDaoImpl implements AccountDao{
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return false;
@@ -87,10 +87,10 @@ public class AccountDaoImpl implements AccountDao{
 			Account user = session.get(Account.class, accountId);
 			return user;
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return null;
@@ -101,17 +101,17 @@ public class AccountDaoImpl implements AccountDao{
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
-				session.beginTransaction();
-				session.delete(findByUserId(id));
-				session.getTransaction().commit();
-				return true;
-			
+			session.beginTransaction();
+			session.delete(findByUserId(id));
+			session.getTransaction().commit();
+			return true;
+
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return false;
@@ -128,5 +128,5 @@ public class AccountDaoImpl implements AccountDao{
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 }

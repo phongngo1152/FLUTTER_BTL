@@ -43,8 +43,7 @@ public class Favorite {
 	}
 
 	// Constructor with all fields
-	public Favorite(Integer favoriteId, Account account, Story story, Date createAt, Date updateAt,
-			Integer status) {
+	public Favorite(Integer favoriteId, Account account, Story story, Date createAt, Date updateAt, Integer status) {
 		this.favoriteId = favoriteId;
 		this.account = account;
 		this.story = story;

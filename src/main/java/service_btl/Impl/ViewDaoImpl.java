@@ -10,52 +10,52 @@ import service_btl.entities.Comment;
 import service_btl.entities.View;
 import service_btl.hibernate.util.HibernateUtil;
 
-public class ViewDaoImpl implements ViewDao{
+public class ViewDaoImpl implements ViewDao {
 
 	@Override
 	public List<View> getView() {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            List list = session.createQuery("from View").list();
-            session.getTransaction().commit();
-            return list;
-        } catch (Exception e) {
-            // TODO: handle exception
-        	System.out.println("Loi o day");
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        }finally {
-            session.close();
-        }
-        return null;
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List list = session.createQuery("from View").list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi o day");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
 	}
 
 	@Override
 	public boolean insertViews(View view) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
-        try {
-            session.beginTransaction();
-            session.save(view);
-            session.getTransaction().commit();
-            return true;
-        } catch (Exception e) {
-            // TODO: handle exception
-        	System.out.println("Loi o day");
-            e.printStackTrace();
-            session.getTransaction().rollback();
-        }finally {
-            session.close();
-        }
-        return false;
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			session.save(view);
+			session.getTransaction().commit();
+			return true;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi o day");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return false;
 	}
 
 	@Override
 	public boolean updateView(View view) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-        Session session = sessionFactory.openSession();
+		Session session = sessionFactory.openSession();
 
 		try {
 			session.beginTransaction();
@@ -63,10 +63,10 @@ public class ViewDaoImpl implements ViewDao{
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return false;
@@ -77,17 +77,17 @@ public class ViewDaoImpl implements ViewDao{
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
-				session.beginTransaction();
-				session.delete(getViewById(favouriteId));
-				session.getTransaction().commit();
-				return true;
-			
+			session.beginTransaction();
+			session.delete(getViewById(favouriteId));
+			session.getTransaction().commit();
+			return true;
+
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return false;
@@ -101,10 +101,10 @@ public class ViewDaoImpl implements ViewDao{
 			View view = session.get(View.class, viewId);
 			return view;
 		} catch (Exception e) {
-        	System.out.println("Loi bat dau tu day");
+			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
-		}finally {
+		} finally {
 			session.close();
 		}
 		return null;
