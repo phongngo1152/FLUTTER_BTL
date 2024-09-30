@@ -4,12 +4,14 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 
 import service_btl.Dao.ChapterDao;
 import service_btl.entities.Author;
 import service_btl.entities.Chapter;
 import service_btl.hibernate.util.HibernateUtil;
 
+@Repository
 public class ChapterDaoImpl implements ChapterDao {
 
 	@Override

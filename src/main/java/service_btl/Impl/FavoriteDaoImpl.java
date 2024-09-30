@@ -4,11 +4,13 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 
 import service_btl.Dao.FavoriteDao;
 import service_btl.entities.Favorite;
 import service_btl.hibernate.util.HibernateUtil;
 
+@Repository
 public class FavoriteDaoImpl implements FavoriteDao {
 
 	@Override

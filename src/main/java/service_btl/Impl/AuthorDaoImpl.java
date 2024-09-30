@@ -4,12 +4,13 @@ import java.util.List;
 
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.springframework.stereotype.Repository;
 
 import service_btl.Dao.AuthorDao;
 import service_btl.entities.Account;
 import service_btl.entities.Author;
 import service_btl.hibernate.util.HibernateUtil;
-
+@Repository
 public class AuthorDaoImpl implements AuthorDao {
 
 	@Override
