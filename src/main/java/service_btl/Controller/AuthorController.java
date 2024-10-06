@@ -73,7 +73,7 @@ public class AuthorController {
 	        if (!coverImageFile.isEmpty()) {
 	            try {
 	                // Lưu ảnh coverImage vào thư mục trên server
-	                String uploadDir = request.getServletContext().getRealPath("resources/images");
+	                String uploadDir = request.getServletContext().getRealPath("resources/image");
 	                String fileName = coverImageFile.getOriginalFilename();
 	                File file = new File(uploadDir, fileName);
 	                coverImageFile.transferTo(file);
@@ -96,7 +96,7 @@ public class AuthorController {
 	@RequestMapping(value = "/form-update-story/{id}")
 	public String showEditStoryForm(@PathVariable("id") Integer id, Model model) {
         Story story = storyDAO.findByStoryId(id);
-        model.addAttribute("story", story);
+        model.addAttribute("s", story);
 		return "author/stories_update";
 	}
 	

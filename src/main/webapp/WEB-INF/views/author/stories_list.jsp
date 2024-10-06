@@ -54,7 +54,7 @@
 												<tr>
 													<td>${s.storyId}</td>
 													<td><img class="img-fluid rounded"
-														src="${pageContext.request.contextPath}/resources/images/${s.coverImage}"
+														src="${pageContext.request.contextPath}/resources/image/${s.coverImage}"
 														alt=""></td>
 													<td>${s.title}</td>
 													<td>${s.category.name}</td>
@@ -66,7 +66,7 @@
 														<div class="flex align-items-center list-user-action">
 															<a class="bg-primary" data-toggle="tooltip"
 																data-placement="top" title="" data-original-title="Edit"
-																href="admin-add-book.html"><i class="ri-pencil-line"></i></a>
+																href="form-update-story/${s.storyId}"><i class="ri-pencil-line"></i></a>
 															<a class="bg-primary" data-toggle="tooltip"
 																data-placement="top" title=""
 																data-original-title="Delete" href="#"><i

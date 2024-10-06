@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <!doctype html>
 <html lang="en">
 
@@ -13,96 +16,76 @@
 <jsp:include page="../linkcss.jsp"></jsp:include>
 </head>
 <body>
-		<!-- loader Start -->
-		<div id="loading">
-			<div id="loading-center"></div>
-		</div>
+	<!-- loader Start -->
+	<div id="loading">
+		<div id="loading-center"></div>
+	</div>
 	<div class="wrapper">
 		<!-- loader END -->
-	<jsp:include page="navuser.jsp"></jsp:include>
-		 <!-- Page Content  -->
-           <div id="content-page" class="content-page">
-            <div class="container-fluid">
-               <div class="row">
-                  <div class="col-sm-12">
-                     <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                           <div class="iq-header-title">
-                              <h4 class="card-title">Update Story</h4>
-                           </div>
-                        </div>
-                        <div class="iq-card-body">
-                           <form action="https://templates.iqonic.design/booksto/html/admin-books.html">
-                              <div class="form-group">
-                                 <label>Book Name:</label>
-                                 <input type="text" class="form-control">
-                              </div>
-                              <div class="form-group">
-                                 <label>Book Category:</label>
-                                 <select class="form-control" id="exampleFormControlSelect1">
-                                    <option selected="" disabled="">Book Category</option>
-                                    <option>General Books</option>
-                                    <option>History Books</option>
-                                    <option>Horror Story</option>
-                                    <option>Arts Books</option>
-                                    <option>Film & Photography</option>
-                                    <option>Business & Economics</option>
-                                    <option>Comics & Mangas</option>
-                                    <option>Computers & Internet</option>
-                                    <option> Sports</option>
-                                    <option> Travel & Tourism</option>
-                                 </select>
-                              </div>
-                              <div class="form-group">
-                                 <label>Book Author:</label>
-                                 <select class="form-control" id="exampleFormControlSelect2">
-                                    <option selected="" disabled="">Book Author</option>
-                                    <option>Jhone Steben</option>
-                                    <option>John Klok</option>
-                                    <option>Ichae Semos</option>
-                                    <option>Jules Boutin</option>
-                                    <option>Kusti Franti</option>
-                                    <option>David King</option>
-                                    <option>Henry Jurk</option>
-                                    <option>Attilio Marzi</option>
-                                    <option>Argele Intili</option>
-                                    <option>Attilio Marzi</option>
-                                 </select>
-                              </div>
-                              <div class="form-group">
-                                 <label>Book Image:</label>
-                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" accept="image/png, image/jpeg">
-                                    <label class="custom-file-label">Choose file</label>
-                                 </div>
-                              </div>
-                              <div class="form-group">
-                                 <label>Book pdf:</label>
-                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" accept="application/pdf, application/vnd.ms-excel">
-                                    <label class="custom-file-label">Choose file</label>
-                                 </div>
-                              </div>
-                              <div class="form-group">
-                                 <label>Book Price:</label>
-                                 <input type="text" class="form-control">
-                              </div>
-                              <div class="form-group">
-                                 <label>Book Description:</label>
-                                 <textarea class="form-control" rows="4"></textarea>
-                              </div>
-                              <button type="submit" class="btn btn-primary">Submit</button>
-                              <button type="reset" class="btn btn-danger">Reset</button>
-                           </form>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
+		<jsp:include page="navuser.jsp"></jsp:include>
+		<!-- Page Content  -->
+		<div id="content-page" class="content-page">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="iq-card">
+							<div class="iq-card-header d-flex justify-content-between">
+								<div class="iq-header-title">
+									<h4 class="card-title">Add Story</h4>
+								</div>
+							</div>
+							<div class="iq-card-body">
+								<form:form action="saveStory" modelAttribute="s" method="post"
+									enctype="multipart/form-data">
+									<div class="form-group">
+										<label>Story Name:</label>
+										<form:input type="text" class="form-control" path="title"/>
+									</div>
+									<div class="form-group">
+										<label>Category:</label>
+										<form:select path="category.categoryId" class="form-control">
+											<option selected="selected" value=''>--- Choose
+												catrgory ---</option>
+											<form:options items="${listcate }" itemLabel="name"
+												itemValue="categoryId"></form:options>
+										</form:select>
+									</div>
+									<div class="form-group">
+										<label>Category:</label>
+										<form:select path="author.authorId" class="form-control">
+											<option selected="selected" value=''>--- Choose
+												author ---</option>
+											<form:options items="${listauthor }" itemLabel="name"
+												itemValue="authorId"></form:options>
+										</form:select>
+									</div>
+									<div class="form-group">
+										<label>Image:</label>
+										<div class="custom-file">
+											<input type="file" name="coverImageFile" />
+										</div>
+									</div>
+									<div class="form-group">
+										<label>Description:</label>
+										<form:textarea class="form-control" path="description"
+											rows="4" />
+									</div>
+									<tr>
+										<td>Status:</td>
+										<td><form:checkbox path="status" /> Active</td>
+									</tr>
+									<button type="submit" class="btn btn-primary">Submit</button>
+									<button type="reset" class="btn btn-danger">Reset</button>
+								</form:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	 <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
 </body>
 
