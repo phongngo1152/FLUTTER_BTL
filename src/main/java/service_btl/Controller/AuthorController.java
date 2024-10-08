@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -31,115 +32,163 @@ import service_btl.entities.StoryDTO;
 public class AuthorController {
 	@Autowired
 	private StoryDao storyDAO;
-	
+
 	@Autowired
 	private CategoryDAO categoryDAO;
-	
+
 	@Autowired
 	private AuthorDao authorDAO;
-	
-	@RequestMapping(value = {"","/login"})
+
+	// Trang đăng nhập
+	@RequestMapping(value = {"", "/login"})
 	public String login() {
-		return "login";
-	}
-	
-	@RequestMapping(value = "/register")
-	public String register() {
-		return "register";
-	}
-	@RequestMapping(value = "/stories")
-	public String stories(Model model) {
-		List<Story> list = storyDAO.getAllStory();
-		model.addAttribute("list", list);
-		return "author/stories_list";
+	    return "login";
 	}
 
-	@RequestMapping(value = "/form-create-story")
-	public String createStory(Model model) {
-		Story story = new Story();
-		model.addAttribute("s", story);
-		List<Category> listcate = categoryDAO.getListCategory();
-		model.addAttribute("listcate", listcate);
-		List<Author> listauthor = authorDAO.getAllAuthor();
-		model.addAttribute("listauthor", listauthor);
-		return "author/stories_create";
+	// Trang đăng ký
+	@RequestMapping(value = "/register")
+	public String register() {
+	    return "register";
 	}
+
+	// Danh sách câu chuyện, kiểm tra đăng nhập
+	@RequestMapping(value = "/stories")
+	public String stories(Model model, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+
+	    List<Story> list = storyDAO.getAllStory();
+	    model.addAttribute("list", list);
+	    return "author/stories_list";
+	}
+
+	// Form tạo câu chuyện, kiểm tra đăng nhập
+	@RequestMapping(value = "/form-create-story")
+	public String createStory(Model model, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+
+	    Story story = new Story();
+	    model.addAttribute("s", story);
+	    List<Category> listcate = categoryDAO.getListCategory();
+	    model.addAttribute("listcate", listcate);
+	    List<Author> listauthor = authorDAO.getAllAuthor();
+	    model.addAttribute("listauthor", listauthor);
+	    return "author/stories_create";
+	}
+
+	// Lưu câu chuyện
 	@PostMapping("/saveStory")
 	public String saveStory(
 	        @ModelAttribute("story") Story story,
 	        @RequestParam("coverImageFile") MultipartFile coverImageFile,
 	        HttpServletRequest request) {
-		
-	        if (!coverImageFile.isEmpty()) {
-	            try {
-	                // Lưu ảnh coverImage vào thư mục trên server
-	                String uploadDir = request.getServletContext().getRealPath("resources/image");
-	                String fileName = coverImageFile.getOriginalFilename();
-	                File file = new File(uploadDir, fileName);
-	                coverImageFile.transferTo(file);
-	                
-	                // Lưu đường dẫn ảnh vào story
-	                story.setCoverImage(fileName);
 
-	            } catch (Exception e) {
-	                e.printStackTrace();
-	                return "error";
-	            }
+	    // Chỉ thực hiện lưu câu chuyện nếu đã đăng nhập
+	    HttpSession session = request.getSession();
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+
+	    if (!coverImageFile.isEmpty()) {
+	        try {
+	            // Lưu ảnh coverImage vào thư mục trên server
+	            String uploadDir = request.getServletContext().getRealPath("resources/image");
+	            String fileName = coverImageFile.getOriginalFilename();
+	            File file = new File(uploadDir, fileName);
+	            coverImageFile.transferTo(file);
+
+	            // Lưu đường dẫn ảnh vào story
+	            story.setCoverImage(fileName);
+
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return "error";
 	        }
+	    }
 
-	        story.setCreateAt(new Date());
-	        story.setUpdateAt(new Date());
-	        storyDAO.insertStory(story);
+	    story.setCreateAt(new Date());
+	    story.setUpdateAt(new Date());
+	    storyDAO.insertStory(story);
 
-	        return "redirect:/author/stories";
+	    return "redirect:/author/stories";
 	}
+
+	// Form cập nhật câu chuyện, kiểm tra đăng nhập
 	@RequestMapping(value = "/form-update-story/{id}")
-	public String showEditStoryForm(@PathVariable("id") Integer id, Model model) {
-        Story story = storyDAO.findByStoryId(id);
-        model.addAttribute("s", story);
-		return "author/stories_update";
+	public String showEditStoryForm(@PathVariable("id") Integer id, Model model, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+
+	    Story story = storyDAO.findByStoryId(id);
+	    model.addAttribute("s", story);
+	    return "author/stories_update";
 	}
-	
+
+	// Cập nhật câu chuyện, kiểm tra đăng nhập
 	@RequestMapping(value = "/update-story/{id}")
-	 public String updateStory(
-		        @PathVariable("id") Integer id,
-		        @ModelAttribute("story") Story story,
-		        @RequestParam("coverImageFile") MultipartFile coverImageFile,
-		        HttpServletRequest request) {
+	public String updateStory(
+	        @PathVariable("id") Integer id,
+	        @ModelAttribute("story") Story story,
+	        @RequestParam("coverImageFile") MultipartFile coverImageFile,
+	        HttpServletRequest request) {
 
-		        if (!coverImageFile.isEmpty()) {
-		            try {
-		                // Lưu ảnh coverImage vào thư mục trên server
-		                String uploadDir = request.getServletContext().getRealPath("/uploads/");
-		                String fileName = coverImageFile.getOriginalFilename();
-		                File file = new File(uploadDir, fileName);
-		                coverImageFile.transferTo(file);
-		                
-		                // Lưu đường dẫn ảnh vào story
-		                story.setCoverImage(fileName);
+	    // Chỉ thực hiện cập nhật câu chuyện nếu đã đăng nhập
+	    HttpSession session = request.getSession();
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 
-		            } catch (Exception e) {
-		                e.printStackTrace();
-		                return "error";
-		            }
-		        }
+	    if (!coverImageFile.isEmpty()) {
+	        try {
+	            // Lưu ảnh coverImage vào thư mục trên server
+	            String uploadDir = request.getServletContext().getRealPath("/uploads/");
+	            String fileName = coverImageFile.getOriginalFilename();
+	            File file = new File(uploadDir, fileName);
+	            coverImageFile.transferTo(file);
 
-		        story.setUpdateAt(new Date());
-		        storyDAO.updateStory(story);
+	            // Lưu đường dẫn ảnh vào story
+	            story.setCoverImage(fileName);
 
-		        return "redirect:/stories_list";
-		    }
-	
+	        } catch (Exception e) {
+	            e.printStackTrace();
+	            return "error";
+	        }
+	    }
+
+	    story.setUpdateAt(new Date());
+	    storyDAO.updateStory(story);
+
+	    return "redirect:/author/stories";
+	}
+
+	// Danh sách chương, kiểm tra đăng nhập
 	@RequestMapping(value = "/chapter")
-	public String chapters() {
-		return "author/chapter_list";
+	public String chapters(HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+	    return "author/chapter_list";
 	}
+
+	// Form tạo chương, kiểm tra đăng nhập
 	@RequestMapping(value = "/create-chapter")
-	public String createChapter() {
-		return "author/chapter_create";
+	public String createChapter(HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+	    return "author/chapter_create";
 	}
+
+	// Danh sách bình luận, kiểm tra đăng nhập
 	@RequestMapping(value = "/comments")
-	public String comments() {
-		return "author/comment_list";
+	public String comments(HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+	    return "author/comment_list";
 	}
 }
