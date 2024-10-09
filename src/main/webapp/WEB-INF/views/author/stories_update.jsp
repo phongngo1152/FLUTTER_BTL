@@ -31,18 +31,60 @@
 						<div class="iq-card">
 							<div class="iq-card-header d-flex justify-content-between">
 								<div class="iq-header-title">
-									<h4 class="card-title">Add Story</h4>
+									<h4 class="card-title">Update Story</h4>
 								</div>
 							</div>
 							<div class="iq-card-body">
-								<form:form action="saveStory" modelAttribute="s" method="post"
+							<c:if test="${not empty message}">
+										<div class="alert alert-success alert-dismissible fade show"
+											role="alert">
+											<strong>${message}!</strong>
+											<button type="button" class="close text-black" data-dismiss="alert"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+
+									</c:if>
+
+									<c:if test="${not empty error}">
+										<div class="alert alert-danger alert-dismissible fade show"
+											role="alert">
+											<strong>${error}!</strong>
+											<button type="button" class="close text-black" data-dismiss="alert"
+												aria-label="Close">
+												<span aria-hidden="true">&times;</span>
+											</button>
+										</div>
+									</c:if>
+								<form:form
+									action="${pageContext.request.contextPath}/author/updateStory"
+									modelAttribute="story" method="post"
 									enctype="multipart/form-data">
+									<form:input type="text" path="storyId" value="${idurl }" hidden="hidden" class="form-control" />
 									<div class="form-group">
-										<label>Story Name:</label>
-										<form:input type="text" class="form-control" path="title"/>
+										<label for="title">Story Title:</label>
+										<form:input type="text" path="title" class="form-control" />
 									</div>
 									<div class="form-group">
-										<label>Category:</label>
+										<label for="description">Description:</label>
+										<form:textarea path="description" class="form-control"
+											rows="3" />
+									</div>
+									<div class="form-group">
+										<label for="coverImage">Cover Image:</label> <input
+											type="file" class="form-control" name="coverImageFile" />
+
+										<!-- Hiển thị ảnh cũ nếu có -->
+										<c:if test="${not empty story.coverImage}">
+											<img class="mt-4"
+												src="${pageContext.request.contextPath}/resources/image/${story.coverImage}"
+												alt="Cover Image" width="100" />
+										</c:if>
+									</div>
+									<!-- Các trường Category và Author -->
+									<div class="form-group">
+										<label for="category">Category:</label>
 										<form:select path="category.categoryId" class="form-control">
 											<option selected="selected" value=''>--- Choose
 												catrgory ---</option>
@@ -51,7 +93,7 @@
 										</form:select>
 									</div>
 									<div class="form-group">
-										<label>Category:</label>
+										<label for="author">Author:</label>
 										<form:select path="author.authorId" class="form-control">
 											<option selected="selected" value=''>--- Choose
 												author ---</option>
@@ -60,25 +102,70 @@
 										</form:select>
 									</div>
 									<div class="form-group">
-										<label>Image:</label>
-										<div class="custom-file">
-											<input type="file" name="coverImageFile" />
-										</div>
+										<label>Status:</label>
+										<form:checkbox path="status" />
+										Display
 									</div>
-									<div class="form-group">
-										<label>Description:</label>
-										<form:textarea class="form-control" path="description"
-											rows="4" />
-									</div>
-									<tr>
-										<td>Status:</td>
-										<td><form:checkbox path="status" /> Active</td>
-									</tr>
-									<button type="submit" class="btn btn-primary">Submit</button>
+									<button type="submit" class="btn btn-primary">Update</button>
 									<button type="reset" class="btn btn-danger">Reset</button>
+									<a type="button" href="${pageContext.request.contextPath}/author/form-update-story/${idurl}/create-chapter" class="btn btn-warning text-white">Create
+										chapter</a>
 								</form:form>
+
+								<c:if test="${count_chapter > 0}">
+									<div class="table-responsive">
+								<div class="iq-header-title">
+									<h4 class="card-title mt-4">Chapter List ${s }</h4>
+								</div>
+									<table class="data-tables table table-striped table-bordered"
+										style="width: 100%">
+										<thead>
+											<tr>
+												<th style="width: 3%;">No</th>
+												<th style="width: 12%;">Title</th>
+												<th style="width: 15%;">Chapter number</th>
+												<th style="width: 18%;">Content</th>
+												<th style="width: 12%;">Status</th>
+												<th style="width: 15%;">Action</th>
+											</tr>
+										</thead>
+										<tbody>
+										
+										<c:forEach items="${listchapter }" var="c">
+												<tr>
+													<td>${c.chapterId }</td>
+													<td>
+														<p class="mb-0">${c.chapterTitle }</p>
+													</td>
+													<td>${c.chapterNumber }</td>
+													<td>
+														<p class="mb-0">${c.content }</p>
+													</td>
+													<td>${c.status == 1 ? "Display": "Hidden"}</td>
+													<td>
+														<div class="flex align-items-center list-user-action">
+															<a class="bg-primary" data-toggle="tooltip"
+																data-placement="top" title="" data-original-title="Edit"
+																href="${pageContext.request.contextPath}/author/form-update-story/${idurl}/edit-chapter/${c.chapterId }"><i class="ri-pencil-line"></i></a>
+															<a class="bg-primary" data-toggle="tooltip"
+																data-placement="top" title="" onclick="confirmDeleteChapter(${idurl },${c.chapterId })"
+																data-original-title="Delete" href="#"><i
+																class="ri-delete-bin-line"></i></a> 
+														</div>
+													</td>
+												</tr>
+												</c:forEach>
+										</tbody>
+									</table>
+								</div>
+								</c:if>
+								<c:if test="${count_chapter  == 0}">
+									<p>No List Chapter</p>
+								</c:if>
+
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>
@@ -88,6 +175,12 @@
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
 </body>
-
+<script type="text/javascript">
+    function confirmDeleteChapter(storyId, chapterId) {
+        if (confirm("Are you sure you want to delete this chapter?")) {
+            window.location.href = '${pageContext.request.contextPath}/author/form-update-story/'+storyId+'/deleteStory/'+chapterId;
+        }
+    }
+</script>
 <!-- Mirrored from templates.iqonic.design/booksto/html/sign-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Apr 2024 20:47:07 GMT -->
 </html>

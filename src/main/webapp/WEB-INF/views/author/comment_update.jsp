@@ -31,18 +31,37 @@
 						<div class="iq-card">
 							<div class="iq-card-header d-flex justify-content-between">
 								<div class="iq-header-title">
-									<h4 class="card-title">Add Story</h4>
+									<h4 class="card-title">Update Comment</h4>
 								</div>
 							</div>
 							<div class="iq-card-body">
-								<form:form action="saveStory" modelAttribute="s" method="post"
-									enctype="multipart/form-data">
+								<form:form
+									action="${pageContext.request.contextPath}/author/updateComment"
+									modelAttribute="cmt" method="post">
+									<form:input type="text" path="commentId" value="${id }" hidden="hidden" class="form-control" />
 									<div class="form-group">
-										<label>Story Name:</label>
-										<form:input type="text" class="form-control" path="title"/>
+										<label for="title">Story Name:</label>
+										<form:input type="text" path="title" class="form-control" />
 									</div>
 									<div class="form-group">
-										<label>Category:</label>
+										<label for="description">Description:</label>
+										<form:textarea path="description" class="form-control"
+											rows="3" />
+									</div>
+									<div class="form-group">
+										<label for="coverImage">Cover Image:</label> <input
+											type="file" class="form-control" name="coverImageFile" />
+
+										<!-- Hiển thị ảnh cũ nếu có -->
+										<c:if test="${not empty story.coverImage}">
+											<img class="mt-4"
+												src="${pageContext.request.contextPath}/resources/image/${story.coverImage}"
+												alt="Cover Image" width="100" />
+										</c:if>
+									</div>
+									<!-- Các trường Category và Author -->
+									<div class="form-group">
+										<label for="category">Category:</label>
 										<form:select path="category.categoryId" class="form-control">
 											<option selected="selected" value=''>--- Choose
 												catrgory ---</option>
@@ -51,7 +70,7 @@
 										</form:select>
 									</div>
 									<div class="form-group">
-										<label>Category:</label>
+										<label for="author">Author:</label>
 										<form:select path="author.authorId" class="form-control">
 											<option selected="selected" value=''>--- Choose
 												author ---</option>
@@ -60,25 +79,21 @@
 										</form:select>
 									</div>
 									<div class="form-group">
-										<label>Image:</label>
-										<div class="custom-file">
-											<input type="file" name="coverImageFile" />
-										</div>
-									</div>
-									<div class="form-group">
-										<label>Description:</label>
-										<form:textarea class="form-control" path="description"
-											rows="4" />
-									</div>
-									<div class="form-group">
 										<label>Status:</label>
-										<form:checkbox path="status" /> Display
+										<form:checkbox path="status" />
+										Display
 									</div>
-									<button type="submit" class="btn btn-primary">Submit</button>
+									<button type="submit" class="btn btn-primary">Update</button>
 									<button type="reset" class="btn btn-danger">Reset</button>
+									<a type="button" href="${pageContext.request.contextPath}/author/form-update-story/${idurl}/create-chapter" class="btn btn-warning text-white">Create
+										chapter</a>
 								</form:form>
+
+								
+
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!doctype html>
 <html lang="en">
 
@@ -13,18 +15,54 @@
 <jsp:include page="../linkcss.jsp"></jsp:include>
 </head>
 <body>
-		<!-- loader Start -->
-		<div id="loading">
-			<div id="loading-center"></div>
-		</div>
+	<!-- loader Start -->
+	<div id="loading">
+		<div id="loading-center"></div>
+	</div>
 	<div class="wrapper">
 		<!-- loader END -->
-	<jsp:include page="navadmin.jsp"></jsp:include>
-		 <!-- Page Content  -->
-         
+		<jsp:include page="navadmin.jsp"></jsp:include>
+		<!-- Page Content  -->
+		<div id="content-page" class="content-page">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="iq-card">
+							<div class="iq-card-header d-flex justify-content-between">
+								<div class="iq-header-title">
+									<h4 class="card-title">Add Categories</h4>
+								</div>
+							</div>
+							<div class="iq-card-body">
+								<form:form action="saveCategory" modelAttribute="c"
+									method="post">
+									<div class="form-group">
+										<label>Category Name:</label>
+										<form:input type="text" class="form-control" path="name" />
+									</div>
+									<div class="form-group">
+										<label>Category Description:</label>
+										<form:textarea class="form-control" rows="4"
+											path="description"></form:textarea>
+									</div>
+									<div class="form-group">
+										<label>Status:</label>
+										<form:radiobutton path="status" value="1" checked="checked" />
+										Display
+										<form:radiobutton path="status" value="0" />
+										Hidden
+									</div>
+									<button type="submit" class="btn btn-primary">Submit</button>
+									<button type="reset" class="btn btn-danger">Reset</button>
+								</form:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	 <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
 </body>
 

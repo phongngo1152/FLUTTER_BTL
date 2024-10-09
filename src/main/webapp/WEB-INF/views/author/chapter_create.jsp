@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <!doctype html>
 <html lang="en">
 
@@ -13,18 +16,57 @@
 <jsp:include page="../linkcss.jsp"></jsp:include>
 </head>
 <body>
-		<!-- loader Start -->
-		<div id="loading">
-			<div id="loading-center"></div>
-		</div>
+	<!-- loader Start -->
+	<div id="loading">
+		<div id="loading-center"></div>
+	</div>
 	<div class="wrapper">
 		<!-- loader END -->
-	<jsp:include page="navuser.jsp"></jsp:include>
-		 <!-- Page Content  -->
-         
+		<jsp:include page="navuser.jsp"></jsp:include>
+		<!-- Page Content  -->
+		<div id="content-page" class="content-page">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="iq-card">
+							<div class="iq-card-header d-flex justify-content-between">
+								<div class="iq-header-title">
+									<h4 class="card-title">Add Chapter</h4>
+								</div>
+							</div>
+							<div class="iq-card-body">
+								<form:form action="saveChapter" modelAttribute="chapter" method="post">
+								
+									<div class="form-group">
+										<label>Story Name:</label>
+										<form:input type="text" class="form-control" path="chapterTitle"/>
+									</div>
+									<div class="form-group">
+										<label>Chapter Number:</label>
+										<form:input type="text" class="form-control" path="chapterNumber"/>
+									</div>
+									<div class="form-group">
+										<label>Description:</label>
+										<form:textarea class="form-control" path="content"
+											rows="4" />
+									</div>
+									<div class="form-group">
+										<label>Status:</label>
+										<form:radiobutton path="status" value="1" /> Display 
+										<form:radiobutton path="status" value="0" /> Hidden
+									</div>
+									<button type="submit" class="btn btn-primary">Submit</button>
+									<button type="reset" class="btn btn-danger">Reset</button>
+								</form:form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	 <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
 </body>
 

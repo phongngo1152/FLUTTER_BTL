@@ -18,5 +18,7 @@ public interface CommentDao {
 	public boolean deleteComment(Integer id);
 
 	public List<Comment> getCommentbyStoryId(Integer storyId);
+	
+	public List<Comment> getCommentbyAccId(Integer accId);
 
 }

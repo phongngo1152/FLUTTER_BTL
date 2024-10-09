@@ -23,10 +23,10 @@
                      <li>
                         <a href="#admin" class="iq-waves-effect" data-toggle="collapse" aria-expanded="false"><span class="ripple rippleEffect"></span><i class="ri-admin-line"></i><span>Admin</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                         <ul id="admin" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle">
-                           <li><a href="dashboard"><i class="ri-dashboard-line"></i>Dashboard</a></li>
-                           <li><a href="categories"><i class="ri-list-check-2"></i>Categories</a></li>
-                           <li><a href="authors"><i class="ri-file-user-line"></i>Authors</a></li>
-                           <li><a href="stories"><i class="ri-book-2-line"></i>Stories</a></li>
+                           <li><a href="${pageContext.request.contextPath}/admin/dashboard"><i class="ri-dashboard-line"></i>Dashboard</a></li>
+                           <li><a href="${pageContext.request.contextPath}/admin/categories"><i class="ri-list-check-2"></i>Categories</a></li>
+                           <li><a href="${pageContext.request.contextPath}/admin/authors"><i class="ri-file-user-line"></i>Authors</a></li>
+                           <li><a href="${pageContext.request.contextPath}/admin/stories"><i class="ri-book-2-line"></i>Stories</a></li>
                         </ul>
                      </li>
                   </ul>

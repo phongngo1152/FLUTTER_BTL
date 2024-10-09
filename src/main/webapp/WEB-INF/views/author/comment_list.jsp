@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!doctype html>
 <html lang="en">
 
@@ -13,68 +15,71 @@
 <jsp:include page="../linkcss.jsp"></jsp:include>
 </head>
 <body>
-		<!-- loader Start -->
-		<div id="loading">
-			<div id="loading-center"></div>
-		</div>
+	<!-- loader Start -->
+	<div id="loading">
+		<div id="loading-center"></div>
+	</div>
 	<div class="wrapper">
 		<!-- loader END -->
-	<jsp:include page="navuser.jsp"></jsp:include>
-		 <!-- Page Content  -->
-          <div id="content-page" class="content-page">
-            <div class="container-fluid">
-               <div class="row">
-                  <div class="col-sm-12">
-                     <div class="iq-card">
-                        <div class="iq-card-header d-flex justify-content-between">
-                           <div class="iq-header-title">
-                              <h4 class="card-title">Comment List</h4>
-                           </div>
-                           
-                        </div>
-                        <div class="iq-card-body">
-                           <div class="table-responsive">
-                              <table class="data-tables table table-striped table-bordered" style="width:100%">
-                                <thead>
-                                    <tr>
-                                        <th style="width: 3%;">No</th>
-                                        <th style="width: 15%;">Book Name</th>
-                                        <th style="width: 15%;">Book Catrgory</th>
-                                        <th style="width: 12%;">User Name</th>
-                                        <th style="width: 18%;">Content</th>
-                                        <th style="width: 15%;">Action</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>1</td>
-                                        <td>Reading on the Worlds</td>
-                                        <td>General Books</td>
-                                        <td>minhthuy</td>
-                                        <td>
-                                          <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rhoncus non elit a scelerisque. Etiam feugiat luctus est, vel commodo odio rhoncus sit amet</p>
-                                        </td>                                     
-                                        <td>
-                                           <div class="flex align-items-center list-user-action">
-                                             <a class="bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="admin-add-book.html"><i class="ri-pencil-line"></i></a>
-                                             <a class="bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" href="#"><i class="ri-delete-bin-line"></i></a>
-                                             <a class="bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Detail" href="#"><i class="ri-eye-line"></i></a>
-                                          </div>
-                                        </td>
-                                    </tr>
-                                   
-                                </tbody>
-                            </table>
-                           </div>
-                        </div>
-                     </div>
-                  </div>
-               </div>
-            </div>
-         </div>
+		<jsp:include page="navuser.jsp"></jsp:include>
+		<!-- Page Content  -->
+		<div id="content-page" class="content-page">
+			<div class="container-fluid">
+				<div class="row">
+					<div class="col-sm-12">
+						<div class="iq-card">
+							<div class="iq-card-header d-flex justify-content-between">
+								<div class="iq-header-title">
+									<h4 class="card-title">Comment List</h4>
+								</div>
+
+							</div>
+							<div class="iq-card-body">
+								<div class="table-responsive">
+									<table class="data-tables table table-striped table-bordered"
+										style="width: 100%">
+										<thead>
+											<tr>
+												<th style="width: 3%;">No</th>
+												<th style="width: 15%;">Story Name</th>
+												<th style="width: 15%;">Chapter</th>
+												<th style="width: 12%;">User Name</th>
+												<th style="width: 28%;">Content</th>
+												<th style="width: 5%;">Action</th>
+											</tr>
+										</thead>
+										<tbody>
+											<c:forEach items="${cmt }" var="c">
+												<tr>
+													<td>${c.commentId }</td>
+													<td>${c.story.title }</td>
+													<td>${c.chapter.chapterTitle }</td>
+													<td>${c.account.userName}</td>
+													<td>
+														<p class="mb-0">${c.content}</p>
+													</td>
+													<td>
+														<div class="flex align-items-center list-user-action">
+															<a class="bg-primary" data-toggle="tooltip"
+																data-placement="top" title="" data-original-title="Edit"
+																href="form-update-comment/${c.commentId}"><i class="ri-pencil-line"></i></a>
+															
+														</div>
+													</td>
+												</tr>
+											</c:forEach>
+										</tbody>
+									</table>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
 	</div>
-	 <!-- Optional JavaScript -->
-      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+	<!-- Optional JavaScript -->
+	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
 </body>
 

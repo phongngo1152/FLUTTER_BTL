@@ -14,6 +14,8 @@ public interface StoryDao {
 
 	public boolean updateStory(Story story);
 
+	public boolean updateStoryStatus(Integer storyId, Boolean newStatus);
+
 	public Story findByStoryId(Integer storyId);
 
 	public boolean deleteStory(Integer id);

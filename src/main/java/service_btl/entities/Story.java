@@ -180,5 +180,13 @@ public class Story {
 		this.category = category;
 	}
 
+	 // Getters for Author and Category
 
+    public String getAuthorName() {
+        return author != null ? author.getName() : "Unknown Author";
+    }
+
+    public String getCategoryName() {
+        return category != null ? category.getName() : "Unknown Category";
+    }
 }

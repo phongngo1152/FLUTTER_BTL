@@ -79,6 +79,36 @@ public class StoryDaoImpl implements StoryDao{
 		}
 		return false;
 	}
+	
+	@Override
+	public boolean updateStoryStatus(Integer storyId, Boolean newStatus) {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    
+	    try {
+	        // Tìm kiếm story theo ID
+	        Story story = session.get(Story.class, storyId);
+	        if (story == null) {
+	            return false; // Nếu không tìm thấy story, trả về false
+	        }
+	        
+	        // Cập nhật trạng thái
+	        story.setStatus(newStatus);
+	        
+	        // Bắt đầu transaction và cập nhật
+	        session.beginTransaction();
+	        session.update(story);
+	        session.getTransaction().commit();
+	        return true;
+	    } catch (Exception e) {
+	        System.out.println("Loi bat dau tu day");
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return false;
+	}
 
 	@Override
 	public Story findByStoryId(Integer storyId ) {

@@ -141,4 +141,24 @@ public class CommentDaoImpl implements CommentDao {
 
 	}
 
+	@Override
+	public List<Comment> getCommentbyAccId(Integer acId) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List list = session.createQuery("from Comment where acId = :acId")
+					.setParameter("acId", acId).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			System.out.println("Loi o day");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+
 }

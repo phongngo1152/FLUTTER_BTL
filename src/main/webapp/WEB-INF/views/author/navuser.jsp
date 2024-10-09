@@ -3,7 +3,7 @@
  <!-- Sidebar  -->
          <div class="iq-sidebar">
             <div class="iq-sidebar-logo d-flex justify-content-between">
-               <a href="index.html" class="header-logo">
+               <a href="${pageContext.request.contextPath}/author" class="header-logo">
                   <img src="${pageContext.request.contextPath}/resources/images/logo.png" class="img-fluid rounded-normal" alt="">
                   <div class="logo-title">
                      <span class="text-primary text-uppercase">Bookstore</span>
@@ -23,9 +23,9 @@
                     <li>
                         <a href="#userinfo" class="iq-waves-effect" data-toggle="collapse" aria-expanded="false"><span class="ripple rippleEffect"></span><i class="las la-user-tie iq-arrow-left"></i><span>Author</span><i class="ri-arrow-right-s-line iq-arrow-right"></i></a>
                         <ul id="userinfo" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle" style="">
-                           <li><a href="stories"><i class="las la-id-card-alt"></i>Stories</a></li>
-                           <li><a href="form-create-story"><i class="las la-plus-circle"></i>Story Add</a></li>
-                           <li><a href="comments"><i class="las la-th-list"></i>Comments</a></li>
+                           <li><a href="${pageContext.request.contextPath}/author/stories"><i class="las la-id-card-alt"></i>Stories</a></li>
+                           <li><a href="${pageContext.request.contextPath}/author/form-create-story"><i class="las la-plus-circle"></i>Story Add</a></li>
+                           <li><a href="${pageContext.request.contextPath}/author/comments"><i class="las la-th-list"></i>Comments</a></li>
                         </ul>
                      </li>
                   </ul>
