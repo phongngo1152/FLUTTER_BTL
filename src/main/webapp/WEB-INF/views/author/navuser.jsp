@@ -25,7 +25,7 @@
                         <ul id="userinfo" class="iq-submenu collapse" data-parent="#iq-sidebar-toggle" style="">
                            <li><a href="${pageContext.request.contextPath}/author/stories"><i class="las la-id-card-alt"></i>Stories</a></li>
                            <li><a href="${pageContext.request.contextPath}/author/form-create-story"><i class="las la-plus-circle"></i>Story Add</a></li>
-                           <li><a href="${pageContext.request.contextPath}/author/comments"><i class="las la-th-list"></i>Comments</a></li>
+                          
                         </ul>
                      </li>
                   </ul>

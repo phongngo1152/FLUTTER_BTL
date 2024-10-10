@@ -94,6 +94,10 @@
 																onclick="confirmDelete(${s.storyId})"
 																data-original-title="Delete" href="#"><i
 																class="ri-delete-bin-line"></i></a>
+																<a class="bg-primary"
+																data-toggle="tooltip" data-placement="top" title=""
+																data-original-title="show comment" href="${s.storyId}/comments"><i
+																class="ri-eye-line"></i></a>
 														</div>
 													</td>
 												</tr>

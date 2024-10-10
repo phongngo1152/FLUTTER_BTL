@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import service_btl.Dao.CategoryDAO;
+import service_btl.Dao.ChapterDao;
 import service_btl.Dao.CommentDao;
 import service_btl.Dao.StoryDao;
 import service_btl.Impl.AccountDaoImpl;
@@ -43,7 +44,8 @@ public class AdminController {
 	@Autowired
 	private AccountDaoImpl accountDao; // Hoặc AccountService nếu bạn sử dụng service layer
 
-	
+	@Autowired
+	private ChapterDao chapterDAO;
 
 	@RequestMapping(value = {"/dashboard" })
 	public String dashboard(HttpSession session) {
@@ -62,7 +64,7 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/authors")
-	public String listAuthor(HttpSession session) {
+	public String listAuthor(HttpSession session, Model model) {
 		Account account = (Account) session.getAttribute("account");
 
         // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
@@ -74,9 +76,47 @@ public class AdminController {
         if (account.getRole() != 0) {
             return "redirect:/err500"; // Chuyển hướng nếu không phải admin
         }
+        List<Account> list = accountDao.getAccbyrRole(1);
+        model.addAttribute("list",list);
 		return "admin/author_list"; // Trả về trang danh sách tác giả
 	}
+	@RequestMapping(value = "/authors-form")
+	public String formCreateAuthor(HttpSession session, Model model) {
+		Account account = (Account) session.getAttribute("account");
 
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 0) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
+        Account acc = new Account();
+        model.addAttribute("acc",acc);
+		return "admin/author_create"; // Trả về trang danh sách tác giả
+	}
+	
+	@PostMapping("/saveAuthor")
+	public String saveAuthor(@ModelAttribute("acc") Account acc, HttpSession session) {
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 0) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
+        acc.setCreateAt(new Date());
+        acc.setUpdateAt(new Date());
+		accountDao.insertUser(acc);
+		return "redirect:/admin/authors";
+	}
+	
 	@RequestMapping(value = "/author-update")
 	public String updateAuthor(HttpSession session) {
 		Account account = (Account) session.getAttribute("account");
@@ -256,6 +296,10 @@ public class AdminController {
 		model.addAttribute("authorName", authorName);
 		model.addAttribute("img", story.getCoverImage());
 		model.addAttribute("s", story);
+		List<Chapter> listchapter = chapterDAO.getChaptersbyStoryId(id);
+		int count_chapter = listchapter.size();
+		model.addAttribute("listchapter", listchapter);
+		model.addAttribute("count_chapter", count_chapter);
 		return "admin/stories_update";
 	}
 
@@ -296,6 +340,34 @@ public class AdminController {
 		return "redirect:/admin/stories"; // Redirect nếu có lỗi
 	}
 
+
+	@RequestMapping(value = "comments/{id}/detail-{cmtI}")
+	public String commentDetail(Model model, HttpSession session, @PathVariable("id") Integer id,@PathVariable("cmtI") Integer cmtI) {
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 0) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
+        Story storyId = storyDAO.findByStoryId(id);
+        if (storyId == null ) {
+			return "notfound";
+		} 
+        Comment cmtId = commentDAO.findByCommentId(cmtI);
+        if (cmtId == null ) {
+			return "notfound";
+		} 
+		List<Comment> cmt = commentDAO.getCommentbyStoryId(id); // add role vào đây
+		model.addAttribute("cmt", cmt);
+		model.addAttribute("cmtId", cmtId);
+		model.addAttribute("storyId", storyId);
+		return "admin/comment_detail";
+	}
 	@RequestMapping(value = "/comments")
 	public String comments(Model model, HttpSession session) {
 		Account account = (Account) session.getAttribute("account");
@@ -311,8 +383,9 @@ public class AdminController {
         }
 		List<Comment> cmt = commentDAO.getAllComment(); // add role vào đây
 		model.addAttribute("cmt", cmt);
-		return "author/comment_list";
+		return "admin/comment_list";
 	}
+	
 	 @RequestMapping(value = "/logout")
 	    public String logout(HttpSession session) {
 	        session.invalidate(); // Xóa phiên làm việc

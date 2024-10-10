@@ -2,6 +2,7 @@
 	pageEncoding="UTF-8"%>
 <%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
+
 <!doctype html>
 <html lang="en">
 
@@ -21,7 +22,7 @@
 	</div>
 	<div class="wrapper">
 		<!-- loader END -->
-		<jsp:include page="navuser.jsp"></jsp:include>
+		<jsp:include page="navadmin.jsp"></jsp:include>
 		<!-- Page Content  -->
 		<div id="content-page" class="content-page">
 			<div class="container-fluid">
@@ -30,45 +31,18 @@
 						<div class="iq-card">
 							<div class="iq-card-header d-flex justify-content-between">
 								<div class="iq-header-title">
-									<h4 class="card-title">Comment List</h4>
+									<h4 class="card-title">Detail Comment</h4>
 								</div>
-
 							</div>
 							<div class="iq-card-body">
-								<div class="table-responsive">
-									<table class="data-tables table table-striped table-bordered"
-										style="width: 100%">
-										<thead>
-											<tr>
-												<th style="width: 3%;">No</th>
-												<th style="width: 15%;">Chapter</th>
-												<th style="width: 50%;">Content</th>
-												<th style="width: 5%;">Action</th>
-											</tr>
-										</thead>
-										<tbody>
-											<c:forEach items="${cmt }" var="c">
-												<tr>
-													<td>${c.commentId }</td>
-													<td>${c.chapter.chapterTitle }</td>
-													<td>
-														<p class="mb-0">${c.content}</p>
-													</td>
-													<td>
-														<div class="flex align-items-center list-user-action">
-															<a class="bg-primary" data-toggle="tooltip"
-																data-placement="top" title="" data-original-title="Detail"
-																href="${pageContext.request.contextPath}/author/${c.story.storyId}/comments/detail-${c.commentId }"><i class="ri-eye-line"></i></a>
-															
-														</div>
-													</td>
-												</tr>
-											</c:forEach>
-										</tbody>
-									</table>
-								</div>
+									
+									<div class="form-group">
+										<label for="description">Description:</label>
+										<textarea class="form-control" disabled="disabled" 
+											rows="3">${cmtId.content }</textarea>
 							</div>
 						</div>
+
 					</div>
 				</div>
 			</div>

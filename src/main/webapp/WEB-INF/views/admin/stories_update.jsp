@@ -72,14 +72,13 @@
 									</div>
 									<button type="submit" class="btn btn-primary">Update</button>
 									<button type="reset" class="btn btn-danger">Reset</button>
-									<a type="button" href="${pageContext.request.contextPath}/author/form-update-story/${idurl}/create-chapter" class="btn btn-warning text-white">Create
-										chapter</a>
+									
 								</form:form>
 
 								<c:if test="${count_chapter > 0}">
 									<div class="table-responsive">
 								<div class="iq-header-title">
-									<h4 class="card-title mt-4">Chapter List ${s }</h4>
+									<h4 class="card-title mt-4">Chapter List</h4>
 								</div>
 									<table class="data-tables table table-striped table-bordered"
 										style="width: 100%">
@@ -110,11 +109,8 @@
 														<div class="flex align-items-center list-user-action">
 															<a class="bg-primary" data-toggle="tooltip"
 																data-placement="top" title="" data-original-title="Edit"
-																href="${pageContext.request.contextPath}/author/form-update-story/${idurl}/edit-chapter/${c.chapterId }"><i class="ri-pencil-line"></i></a>
-															<a class="bg-primary" data-toggle="tooltip"
-																data-placement="top" title="" onclick="confirmDeleteChapter(${idurl },${c.chapterId })"
-																data-original-title="Delete" href="#"><i
-																class="ri-delete-bin-line"></i></a> 
+																href="${pageContext.request.contextPath}/admin/comments/${c.story.storyId}/detail-${c.chapterId }"><i class="ri-eye-line"></i></a>
+															
 														</div>
 													</td>
 												</tr>

@@ -20,6 +20,8 @@ public interface AccountDao {
 	public boolean deleteUser(Integer id);
 
 	public List<Account> getUserByName(String accountname);
+	
+	public List<Account> getAccbyrRole(Integer role);
 
 	public Account checklogin(String username, String password);
 }

@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 <!doctype html>
 <html lang="en">
 
@@ -30,7 +32,11 @@
                            <div class="iq-header-title">
                               <h4 class="card-title">Author List</h4>
                            </div>
-                          
+                          <div class="iq-card-header-toolbar d-flex align-items-center">
+									<a
+										href="${pageContext.request.contextPath}/admin/authors-form"
+										class="btn btn-primary">Add New Author</a>
+								</div>
                         </div>
                         <div class="iq-card-body">
                            <div class="table-responsive">
@@ -39,19 +45,19 @@
                                     <tr>
                                        <th style="width: 5%;">No</th>
                                        <th style="width: 20%;">Author Name</th>
-                                       <th style="width: 60%;">Bio</th>
+                                       <th style="width: 20%;">email</th>
                                        <th style="width: 5%;">Status</th>
                                        <th style="width: 10%;">Action</th>
                                     </tr>
                                  </thead>
                                  <tbody>
+                                    <c:forEach items="${list }" var="a">
                                     <tr>
-                                       <td>1</td>
-                                       <td>Jhone Steben</td>
-                                       <td>
-                                          <p class="mb-0">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed rhoncus non elit a scelerisque. Etiam feugiat luctus est, vel commodo odio rhoncus sit amet</p>
-                                       </td>
-                                       <td>Active</td>
+                                       <td>${a.acId }</td>
+                                       <td>${a.userName }</td>
+                                       
+                                       <td>${a.email }</td>
+                                       <td>${a.status == 1? "Active" : "Off" }</td>
                                        <td>
                                           <div class="flex align-items-center list-user-action">
                                              <a class="bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="admin-add-category.html"><i class="ri-pencil-line"></i></a>
@@ -60,6 +66,7 @@
                                        </td>
                                     </tr>
                                     
+                                    </c:forEach>
                                  </tbody>
                               </table>
                            </div>

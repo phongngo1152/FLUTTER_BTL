@@ -155,4 +155,29 @@ public class AccountDaoImpl implements AccountDao {
 	    return account; // Trả về tài khoản nếu tìm thấy, hoặc null nếu không
 	}
 
+	@Override
+	public List<Account> getAccbyrRole(Integer role) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			// Thực hiện truy vấn HQL, sử dụng tham số :role để tránh SQL Injection
+	        List<Account> list = session.createQuery("from Account where role = :role", Account.class)
+	                                    .setParameter("role", role)
+	                                    .list();
+
+	        session.getTransaction().commit();
+	        return list;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi bat dau tu day");
+			e.printStackTrace();
+
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+
 }

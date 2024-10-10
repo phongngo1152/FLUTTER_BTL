@@ -21,7 +21,7 @@
 	</div>
 	<div class="wrapper">
 		<!-- loader END -->
-		<jsp:include page="navuser.jsp"></jsp:include>
+		<jsp:include page="navadmin.jsp"></jsp:include>
 		<!-- Page Content  -->
 		<div id="content-page" class="content-page">
 			<div class="container-fluid">
@@ -58,7 +58,7 @@
 														<div class="flex align-items-center list-user-action">
 															<a class="bg-primary" data-toggle="tooltip"
 																data-placement="top" title="" data-original-title="Detail"
-																href="${pageContext.request.contextPath}/author/${c.story.storyId}/comments/detail-${c.commentId }"><i class="ri-eye-line"></i></a>
+																href="${pageContext.request.contextPath}/admin/${c.story.storyId}/comments/detail-${c.commentId }"><i class="ri-eye-line"></i></a>
 															
 														</div>
 													</td>
