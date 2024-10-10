@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -20,6 +21,8 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import service_btl.Dao.CategoryDAO;
 import service_btl.Dao.CommentDao;
 import service_btl.Dao.StoryDao;
+import service_btl.Impl.AccountDaoImpl;
+import service_btl.entities.Account;
 import service_btl.entities.Category;
 import service_btl.entities.Chapter;
 import service_btl.entities.Comment;
@@ -36,37 +39,55 @@ public class AdminController {
 
 	@Autowired
 	private StoryDao storyDAO;
-	
-	@RequestMapping(value = { "", "/login" })
+
+	@Autowired
+	private AccountDaoImpl accountDao; // Hoặc AccountService nếu bạn sử dụng service layer
+
+	@RequestMapping(value = { "/login" })
 	public String login() {
-		return "login";
+		return "login"; // Trả về trang đăng nhập
 	}
 
-	@RequestMapping(value = "/dashboard")
-	public String dashboard() {
-		return "admin/dashboard";
+	@RequestMapping(value = { "", "/dashboard" })
+	public String dashboard(HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
+		return "admin/dashboard"; // Trả về trang dashboard
 	}
 
 	@RequestMapping(value = "/authors")
-	public String listAuthor() {
-		return "admin/author_list";
+	public String listAuthor(HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
+		return "admin/author_list"; // Trả về trang danh sách tác giả
 	}
 
 	@RequestMapping(value = "/author-update")
-	public String updateAuthor() {
-		return "admin/author_update";
+	public String updateAuthor(HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
+		return "admin/author_update"; // Trả về trang cập nhật tác giả
 	}
 
 	//
 	@RequestMapping(value = "/categories")
-	public String listCate(Model model) {
+	public String listCate(Model model, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login";
+		}
 		List<Category> cate = categoryDAO.getListCategory();
 		model.addAttribute("cate", cate);
 		return "admin/cate_list";
 	}
 
 	@RequestMapping(value = "/cate-create-form")
-	public String formCreateCate(Model model) {
+	public String formCreateCate(Model model, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		Category cate = new Category();
 		model.addAttribute("c", cate);
 		return "admin/cate_create";
@@ -74,7 +95,10 @@ public class AdminController {
 
 	// Thêm danh mục mới
 	@PostMapping("/saveCategory")
-	public String saveCategory(@ModelAttribute("category") Category category) {
+	public String saveCategory(@ModelAttribute("category") Category category, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		category.setCreateAt(new Date());
 		category.setUpdateAt(new Date());
 		categoryDAO.insertCates(category);
@@ -83,7 +107,10 @@ public class AdminController {
 
 	// Cập nhật danh mục
 	@GetMapping("/edit/{id}")
-	public String editCategory(Model model, @PathVariable("id") Integer cateId) {
+	public String editCategory(Model model, @PathVariable("id") Integer cateId, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		Category cate = categoryDAO.findByCateId(cateId);
 		model.addAttribute("cate", cate);
 		model.addAttribute("cateId", cateId);
@@ -92,8 +119,10 @@ public class AdminController {
 
 	@PostMapping("/updateCategory")
 	public String updateCategory(@ModelAttribute("cate") Category cate, @RequestParam("categoryId") Integer storyId,
-			HttpServletRequest request) {
-
+			HttpServletRequest request, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		cate.setCreateAt(new Date());
 		cate.setUpdateAt(new Date());
 		categoryDAO.updateCate(cate);
@@ -102,7 +131,11 @@ public class AdminController {
 
 	// Xóa danh mục theo ID
 	@GetMapping("/deleteCategory/{id}")
-	public String deleteCategory(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+	public String deleteCategory(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes,
+			HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		Category cate = categoryDAO.findByCateId(id);
 		if (cate != null) {
 			categoryDAO.deleteCate(id);
@@ -115,57 +148,93 @@ public class AdminController {
 	}
 
 	@RequestMapping(value = "/stories")
-	public String listBook(Model model) {
+	public String listBook(Model model, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		List<Story> story = storyDAO.getAllStory();
-		model.addAttribute("s",story);
+		model.addAttribute("s", story);
 		return "admin/stories_list";
 	}
+
 	@GetMapping("/editStory/{id}")
-	public String editStory(Model model, @PathVariable("id") Integer id) {
-		
+	public String editStory(Model model, @PathVariable("id") Integer id, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		Story story = storyDAO.findByStoryId(id);
 		String categoryName = story.getCategoryName();
 		String authorName = story.getAuthorName();
-		
+
 		// Thêm vào model để hiển thị trong JSP
 		model.addAttribute("categoryName", categoryName);
 		model.addAttribute("authorName", authorName);
-		 model.addAttribute("img", story.getCoverImage());
+		model.addAttribute("img", story.getCoverImage());
 		model.addAttribute("s", story);
 		return "admin/stories_update";
 	}
 
 	@PostMapping("/updateStory")
-	public String updateStory(@ModelAttribute("s") Story story, 
-	                          @RequestParam("storyId") Integer storyId, 
-	                          @RequestParam(value = "status", required = false) Boolean status,
-	                          HttpServletRequest request) {
-	    // Tìm story theo storyId
-	    story = storyDAO.findByStoryId(storyId);
-	    
-	    if (story != null) {
-	        // Cập nhật trạng thái
-	        story.setStatus(status != null && status); // Nếu status không null và true, thì set là true
+	public String updateStory(@ModelAttribute("s") Story story, @RequestParam("storyId") Integer storyId,
+			@RequestParam(value = "status", required = false) Boolean status, HttpServletRequest request) {
+		// Tìm story theo storyId
+		story = storyDAO.findByStoryId(storyId);
 
-	        // Gọi phương thức để cập nhật trạng thái vào cơ sở dữ liệu
-	        boolean result = storyDAO.updateStoryStatus(storyId, story.getStatus());
+		if (story != null) {
+			// Cập nhật trạng thái
+			story.setStatus(status != null && status); // Nếu status không null và true, thì set là true
 
-	        // Kiểm tra kết quả và chuyển hướng
-	        if (result) {
-	            return "redirect:/admin/stories"; // Redirect đến trang danh sách câu chuyện
-	        } else {
-	            // Xử lý lỗi (có thể thêm thông báo lỗi vào mô hình để hiển thị)
-	            request.setAttribute("errorMessage", "Cập nhật thất bại.");
-	        }
-	    } else {
-	        request.setAttribute("errorMessage", "Không tìm thấy câu chuyện.");
-	    }
-	    return "redirect:/admin/stories"; // Redirect nếu có lỗi
+			// Gọi phương thức để cập nhật trạng thái vào cơ sở dữ liệu
+			boolean result = storyDAO.updateStoryStatus(storyId, story.getStatus());
+
+			// Kiểm tra kết quả và chuyển hướng
+			if (result) {
+				return "redirect:/admin/stories"; // Redirect đến trang danh sách câu chuyện
+			} else {
+				// Xử lý lỗi (có thể thêm thông báo lỗi vào mô hình để hiển thị)
+				request.setAttribute("errorMessage", "Cập nhật thất bại.");
+			}
+		} else {
+			request.setAttribute("errorMessage", "Không tìm thấy câu chuyện.");
+		}
+		return "redirect:/admin/stories"; // Redirect nếu có lỗi
 	}
+
 	@RequestMapping(value = "/comments")
-	public String comments(Model model) {
+	public String comments(Model model, HttpSession session) {
+		if (session.getAttribute("account") == null) {
+			return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+		}
 		List<Comment> cmt = commentDAO.getAllComment(); // add role vào đây
 		model.addAttribute("cmt", cmt);
 		return "author/comment_list";
 	}
+	 @RequestMapping(value = "/logout")
+	    public String logout(HttpSession session) {
+	        session.invalidate(); // Xóa phiên làm việc
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập
+	    }
+	    @PostMapping("/login")
+	    public String login(@RequestParam("email") String email, // Thay đổi từ username thành email
+	                        @RequestParam("password") String password,
+	                        Model model, HttpSession session) {
+	        System.out.println("Đang cố gắng đăng nhập với email: " + email); // In ra email đang cố gắng đăng nhập
+	        Account account = accountDao.checklogin(email, password); // Thay đổi từ username thành email
+	        if (account != null) {
+	            session.setAttribute("account", account); // Lưu thông tin người dùng vào session
+	         // Kiểm tra role của người dùng
+	            if (account.getRole() == 0) {
+	                return "redirect:/admin/dashboard"; // Nếu role = 0, chuyển về trang admin
+	            } else if (account.getRole() == 1) {
+	                return "redirect:/author/stories"; // Nếu role = 1, chuyển về trang author
+	            } else {
+	                // Nếu role không hợp lệ, chuyển về trang đăng nhập với thông báo lỗi
+	                model.addAttribute("error", "Role không hợp lệ!");
+	                return "login";
+	            }// Chuyển hướng đến dashboard
+	        } else {
+	            model.addAttribute("error", true); // Thêm lỗi nếu đăng nhập không thành công
+	            return "login"; // Trả về lại trang đăng nhập
+	        }
+	    }
 }

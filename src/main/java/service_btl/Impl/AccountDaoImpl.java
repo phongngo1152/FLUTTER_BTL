@@ -127,8 +127,32 @@ public class AccountDaoImpl implements AccountDao {
 
 	@Override
 	public Account checklogin(String username, String password) {
-		// TODO Auto-generated method stub
-		return null;
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    Account account = null; // Khởi tạo biến account
+	    try {
+	        session.beginTransaction();
+	        
+	        // Sử dụng HQL để tìm kiếm tài khoản theo tên người dùng và mật khẩu
+	        String hql = "FROM Account WHERE email = :email AND password = :password";
+	        account = (Account) session.createQuery(hql)
+	                .setParameter("email", username)
+	                .setParameter("password", password)
+	                .uniqueResult();
+	        session.getTransaction().commit();
+	        if (account != null) {
+	            System.out.println("Đăng nhập thành công: " + account.toString());
+	        } else {
+	            System.out.println("Không tìm thấy tài khoản với email: " + username);
+	        }
+	    } catch (Exception e) {
+	        System.out.println("Lỗi khi kiểm tra đăng nhập");
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return account; // Trả về tài khoản nếu tìm thấy, hoặc null nếu không
 	}
 
 }

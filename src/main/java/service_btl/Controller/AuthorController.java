@@ -5,6 +5,7 @@ import java.util.Date;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -27,6 +28,7 @@ import service_btl.Dao.ChapterDao;
 import service_btl.Dao.CommentDao;
 import service_btl.Dao.StoryDao;
 import service_btl.Service.Service_btl;
+import service_btl.entities.Account;
 import service_btl.entities.Author;
 import service_btl.entities.Category;
 import service_btl.entities.Chapter;
@@ -51,28 +53,34 @@ public class AuthorController {
 
 	@Autowired
 	private CommentDao commentDAO;
-
-	@RequestMapping(value = { "", "/login" })
-	public String login() {
-		return "login";
-	}
-
-	@RequestMapping(value = "/register")
-	public String register() {
-		return "register";
-	}
+//
+//	@RequestMapping(value = { "", "/login" })
+//	public String login() {
+//		return "login";
+//	}
+//
+//	@RequestMapping(value = "/register")
+//	public String register() {
+//		return "register";
+//	}
 
 	// STORY
 
 	@RequestMapping(value = "/stories")
-	public String stories(Model model) {
+	public String stories(Model model, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		List<Story> list = storyDAO.getAllStory();
 		model.addAttribute("list", list);
 		return "author/stories_list";
 	}
 
 	@RequestMapping(value = "/form-create-story")
-	public String createStory(Model model) {
+	public String createStory(Model model, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		Story story = new Story();
 		model.addAttribute("s", story);
 		List<Category> listcate = categoryDAO.getListCategory();
@@ -85,7 +93,11 @@ public class AuthorController {
 	@PostMapping("/saveStory")
 	public String saveStory(@ModelAttribute("story") Story story,
 			@RequestParam("coverImageFile") MultipartFile coverImageFile, HttpServletRequest request) {
-
+		 // Chỉ thực hiện lưu câu chuyện nếu đã đăng nhập
+	    HttpSession session = request.getSession();
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		if (!coverImageFile.isEmpty()) {
 			try {
 				// Lưu ảnh coverImage vào thư mục trên server
@@ -111,7 +123,10 @@ public class AuthorController {
 	}
 
 	@RequestMapping(value = "/form-update-story/{id}")
-	public String showEditStoryForm(@PathVariable("id") Integer id, Model model) {
+	public String showEditStoryForm(@PathVariable("id") Integer id, Model model, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		Story story = storyDAO.findByStoryId(id);
 		if (story == null) {
 			return "notfound";
@@ -134,7 +149,11 @@ public class AuthorController {
 	@PostMapping("/updateStory")
 	public String updateStory(@ModelAttribute("story") Story story,
 			@RequestParam("coverImageFile") MultipartFile coverImageFile, HttpServletRequest request) {
-
+		 // Chỉ thực hiện cập nhật câu chuyện nếu đã đăng nhập
+	    HttpSession session = request.getSession();
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		Story existingStory = storyDAO.findByStoryId(story.getStoryId());
 
 		if (existingStory == null) {
@@ -171,7 +190,10 @@ public class AuthorController {
 	}
 
 	@RequestMapping(value = "/deleteStory/{id}", method = RequestMethod.GET)
-	public String deleteStory(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes) {
+	public String deleteStory(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		Story story = storyDAO.findByStoryId(id);
 		List<Chapter> chapter = chapterDAO.getChaptersbyStoryId(id);
 		int countChapter = chapter.size();
@@ -191,7 +213,10 @@ public class AuthorController {
 	// CHAPTER
 
 	@RequestMapping(value = "/form-update-story/{id}/create-chapter")
-	public String createChapter(Model model, @PathVariable("id") Integer storyId) {
+	public String createChapter(Model model, @PathVariable("id") Integer storyId, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		Story story = storyDAO.findByStoryId(storyId);
 		if (story == null) {
 			return "notfound";
@@ -206,7 +231,10 @@ public class AuthorController {
 
 	@PostMapping("/form-update-story/{id}/saveChapter")
 	public String saveChapter(@ModelAttribute("chapter") Chapter chapter, @PathVariable("id") Integer storyId,
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 
 		Story story = storyDAO.findByStoryId(storyId);
 		if (story != null) {
@@ -224,7 +252,10 @@ public class AuthorController {
 
 	@RequestMapping(value = "/form-update-story/{id}/edit-chapter/{idChapter}")
 	public String editChapter(Model model, @PathVariable("idChapter") Integer idChapter,
-			@PathVariable("id") Integer storyId) {
+			@PathVariable("id") Integer storyId, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 
 		Story story = storyDAO.findByStoryId(storyId);
 		Chapter chapterid = chapterDAO.findByChapterId(idChapter);
@@ -250,7 +281,10 @@ public class AuthorController {
 			return "redirect:/author/form-update-story/" + storyId;
 	}
 	@RequestMapping(value = "/form-update-story/{storyId}/deleteStory/{id}", method = RequestMethod.GET)
-	public String deleteChapter(@PathVariable("id") Integer id, @PathVariable("storyId") Integer storyId, RedirectAttributes redirectAttributes) {
+	public String deleteChapter(@PathVariable("id") Integer id, @PathVariable("storyId") Integer storyId, RedirectAttributes redirectAttributes, HttpSession session) {
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 		Chapter chapter = chapterDAO.findByChapterId(id);
 		
 		if (chapter != null) {
@@ -266,14 +300,23 @@ public class AuthorController {
 	// COMMENT
 
 	@RequestMapping(value = "/comments")
-	public String comments(Model model) {
-		List<Comment> cmt = commentDAO.getCommentbyAccId(2); // add role vào đây
+	public String comments(Model model, HttpSession session) {
+		 Account account = (Account) session.getAttribute("account");
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
+	    Integer accountId = account.getAcId();
+		List<Comment> cmt = commentDAO.getCommentbyAccId(accountId); // add role vào đây
 		model.addAttribute("cmt", cmt);
 		return "author/comment_list";
 	}
 
 	@RequestMapping(value = "/form-update-comment/{id}")
-	public String formUpdateComment(Model model, @PathVariable("id") Integer id) {
+	public String formUpdateComment(Model model, @PathVariable("id") Integer id, HttpSession session) {
+		
+	    if (session.getAttribute("account") == null) {
+	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
+	    }
 //		Comment cmt = new Comment();
 //		model.addAttribute("cmt", cmt);
 //		model.addAttribute(id);

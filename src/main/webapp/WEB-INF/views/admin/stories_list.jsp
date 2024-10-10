@@ -66,9 +66,10 @@
 												<th style="width: 12%;">Story Image</th>
 												<th style="width: 15%;">Story Name</th>
 												<th style="width: 15%;">Category</th>
+												<th style="width: 15%;">Author</th>
 												<th style="width: 18%;">Description</th>
-												<th style="width: 12%;">Status</th>
-												<th style="width: 15%;">Action</th>
+												<th style="width: 10%;">Status</th>
+												<th style="width: 5%;">Action</th>
 											</tr>
 										</thead>
 										<tbody>
@@ -80,6 +81,7 @@
 														alt=""></td>
 													<td>${s.title}</td>
 													<td>${s.category.name}</td>
+													<td>${s.author.name}</td>
 													<td>
 														<p class="mb-0">${s.description}</p>
 													</td>

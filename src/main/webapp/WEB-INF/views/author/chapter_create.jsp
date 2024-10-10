@@ -52,7 +52,7 @@
 									</div>
 									<div class="form-group">
 										<label>Status:</label>
-										<form:radiobutton path="status" value="1" /> Display 
+										<form:radiobutton path="status" value="1" checked="checked"/> Display 
 										<form:radiobutton path="status" value="0" /> Hidden
 									</div>
 									<button type="submit" class="btn btn-primary">Submit</button>
