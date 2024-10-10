@@ -66,11 +66,19 @@ public class AuthorController {
 
 	// STORY
 
-	@RequestMapping(value = "/stories")
+	@RequestMapping(value = {"/stories",""})
 	public String stories(Model model, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		List<Story> list = storyDAO.getAllStory();
 		model.addAttribute("list", list);
 		return "author/stories_list";
@@ -78,9 +86,17 @@ public class AuthorController {
 
 	@RequestMapping(value = "/form-create-story")
 	public String createStory(Model model, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		Story story = new Story();
 		model.addAttribute("s", story);
 		List<Category> listcate = categoryDAO.getListCategory();
@@ -95,9 +111,17 @@ public class AuthorController {
 			@RequestParam("coverImageFile") MultipartFile coverImageFile, HttpServletRequest request) {
 		 // Chỉ thực hiện lưu câu chuyện nếu đã đăng nhập
 	    HttpSession session = request.getSession();
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+	    Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		if (!coverImageFile.isEmpty()) {
 			try {
 				// Lưu ảnh coverImage vào thư mục trên server
@@ -124,9 +148,17 @@ public class AuthorController {
 
 	@RequestMapping(value = "/form-update-story/{id}")
 	public String showEditStoryForm(@PathVariable("id") Integer id, Model model, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		Story story = storyDAO.findByStoryId(id);
 		if (story == null) {
 			return "notfound";
@@ -151,9 +183,17 @@ public class AuthorController {
 			@RequestParam("coverImageFile") MultipartFile coverImageFile, HttpServletRequest request) {
 		 // Chỉ thực hiện cập nhật câu chuyện nếu đã đăng nhập
 	    HttpSession session = request.getSession();
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+	    Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		Story existingStory = storyDAO.findByStoryId(story.getStoryId());
 
 		if (existingStory == null) {
@@ -186,14 +226,22 @@ public class AuthorController {
 
 		storyDAO.updateStory(story);
 
-		return "redirect:/author/stories"; // Chuyển hướng về trang danh sách câu chuyện
+		return "redirect:/stories"; // Chuyển hướng về trang danh sách câu chuyện
 	}
 
 	@RequestMapping(value = "/deleteStory/{id}", method = RequestMethod.GET)
 	public String deleteStory(@PathVariable("id") Integer id, RedirectAttributes redirectAttributes, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		Story story = storyDAO.findByStoryId(id);
 		List<Chapter> chapter = chapterDAO.getChaptersbyStoryId(id);
 		int countChapter = chapter.size();
@@ -207,16 +255,24 @@ public class AuthorController {
 			redirectAttributes.addFlashAttribute("error", "Story delete failed, because contains comment or chapter!");
 		}
 
-		return "redirect:/author/stories"; // Điều hướng về trang danh sách câu chuyện
+		return "redirect:/stories"; // Điều hướng về trang danh sách câu chuyện
 	}
 
 	// CHAPTER
 
 	@RequestMapping(value = "/form-update-story/{id}/create-chapter")
 	public String createChapter(Model model, @PathVariable("id") Integer storyId, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		Story story = storyDAO.findByStoryId(storyId);
 		if (story == null) {
 			return "notfound";
@@ -232,9 +288,17 @@ public class AuthorController {
 	@PostMapping("/form-update-story/{id}/saveChapter")
 	public String saveChapter(@ModelAttribute("chapter") Chapter chapter, @PathVariable("id") Integer storyId,
 			HttpServletRequest request, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 
 		Story story = storyDAO.findByStoryId(storyId);
 		if (story != null) {
@@ -253,9 +317,17 @@ public class AuthorController {
 	@RequestMapping(value = "/form-update-story/{id}/edit-chapter/{idChapter}")
 	public String editChapter(Model model, @PathVariable("idChapter") Integer idChapter,
 			@PathVariable("id") Integer storyId, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 
 		Story story = storyDAO.findByStoryId(storyId);
 		Chapter chapterid = chapterDAO.findByChapterId(idChapter);
@@ -272,7 +344,18 @@ public class AuthorController {
 
 	@PostMapping("/updateChapter")
 	public String updateChapter(@ModelAttribute("chapter") Chapter chapter, @RequestParam("story.storyId") Integer storyId,
-			HttpServletRequest request) {
+			HttpServletRequest request, HttpSession session) {
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		
 			chapter.setCreateAt(new Date());
 			chapter.setUpdateAt(new Date());
@@ -282,9 +365,17 @@ public class AuthorController {
 	}
 	@RequestMapping(value = "/form-update-story/{storyId}/deleteStory/{id}", method = RequestMethod.GET)
 	public String deleteChapter(@PathVariable("id") Integer id, @PathVariable("storyId") Integer storyId, RedirectAttributes redirectAttributes, HttpSession session) {
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 		Chapter chapter = chapterDAO.findByChapterId(id);
 		
 		if (chapter != null) {
@@ -301,10 +392,17 @@ public class AuthorController {
 
 	@RequestMapping(value = "/comments")
 	public String comments(Model model, HttpSession session) {
-		 Account account = (Account) session.getAttribute("account");
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 0) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 	    Integer accountId = account.getAcId();
 		List<Comment> cmt = commentDAO.getCommentbyAccId(accountId); // add role vào đây
 		model.addAttribute("cmt", cmt);
@@ -314,9 +412,17 @@ public class AuthorController {
 	@RequestMapping(value = "/form-update-comment/{id}")
 	public String formUpdateComment(Model model, @PathVariable("id") Integer id, HttpSession session) {
 		
-	    if (session.getAttribute("account") == null) {
-	        return "redirect:/admin/login"; // Chuyển hướng về trang đăng nhập nếu không có tài khoản
-	    }
+		Account account = (Account) session.getAttribute("account");
+
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 1) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
 //		Comment cmt = new Comment();
 //		model.addAttribute("cmt", cmt);
 //		model.addAttribute(id);
