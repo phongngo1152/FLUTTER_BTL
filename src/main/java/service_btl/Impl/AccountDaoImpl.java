@@ -9,6 +9,7 @@ import org.springframework.stereotype.Repository;
 import service_btl.Dao.AccountDao;
 import service_btl.entities.Account;
 import service_btl.hibernate.util.HibernateUtil;
+import org.mindrot.jbcrypt.BCrypt;
 
 @Repository
 public class AccountDaoImpl implements AccountDao {
@@ -46,11 +47,13 @@ public class AccountDaoImpl implements AccountDao {
 		Session session = sessionFactory.openSession();
 		try {
 			session.beginTransaction();
+			String hashedPassword = BCrypt.hashpw(account.getPassword(), BCrypt.gensalt());
+			account.setPassword(hashedPassword);
+
 			session.save(account);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
 			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
@@ -128,31 +131,35 @@ public class AccountDaoImpl implements AccountDao {
 	@Override
 	public Account checklogin(String username, String password) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
-	    Session session = sessionFactory.openSession();
-	    Account account = null; // Khởi tạo biến account
-	    try {
-	        session.beginTransaction();
-	        
-	        // Sử dụng HQL để tìm kiếm tài khoản theo tên người dùng và mật khẩu
-	        String hql = "FROM Account WHERE email = :email AND password = :password";
-	        account = (Account) session.createQuery(hql)
-	                .setParameter("email", username)
-	                .setParameter("password", password)
-	                .uniqueResult();
-	        session.getTransaction().commit();
-	        if (account != null) {
-	            System.out.println("Đăng nhập thành công: " + account.toString());
-	        } else {
-	            System.out.println("Không tìm thấy tài khoản với email: " + username);
-	        }
-	    } catch (Exception e) {
-	        System.out.println("Lỗi khi kiểm tra đăng nhập");
-	        e.printStackTrace();
-	        session.getTransaction().rollback();
-	    } finally {
-	        session.close();
-	    }
-	    return account; // Trả về tài khoản nếu tìm thấy, hoặc null nếu không
+		Session session = sessionFactory.openSession();
+		Account account = null; // Khởi tạo biến account
+		try {
+			session.beginTransaction();
+
+			String hql = "FROM Account WHERE email = :email";
+			account = (Account) session.createQuery(hql)
+					.setParameter("email", username)
+					.uniqueResult();
+			session.getTransaction().commit();
+
+			if (account != null) {
+				if (BCrypt.checkpw(password, account.getPassword())) {
+					System.out.println("Đăng nhập thành công: " + account.toString());
+				} else {
+					System.out.println("Mật khẩu không đúng");
+					account = null;
+				}
+			} else {
+				System.out.println("Không tìm thấy tài khoản với email: " + username);
+			}
+		} catch (Exception e) {
+			System.out.println("Lỗi khi kiểm tra đăng nhập");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return account;
 	}
 
 	@Override
