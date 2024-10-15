@@ -80,6 +80,8 @@ public class AdminController {
         model.addAttribute("list",list);
 		return "admin/author_list"; // Trả về trang danh sách tác giả
 	}
+	
+	
 	@RequestMapping(value = "/authors-form")
 	public String formCreateAuthor(HttpSession session, Model model) {
 		Account account = (Account) session.getAttribute("account");
@@ -391,6 +393,8 @@ public class AdminController {
 	        session.invalidate(); // Xóa phiên làm việc
 	        return "redirect:/login"; // Chuyển hướng về trang đăng nhập
 	    }
+	 
+	 
 	    @PostMapping("/login")
 	    public String login(@RequestParam("email") String email, // Thay đổi từ username thành email
 	                        @RequestParam("password") String password,

@@ -93,8 +93,10 @@ public class AccountDaoImpl implements AccountDao {
 	public boolean updateser(Account account) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
-
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		try {
+			String hashedPassword = passwordEncoder.encode(account.getPassword());
+			 account.setPassword(hashedPassword);
 			session.beginTransaction();
 			session.update(account);
 			session.getTransaction().commit();
