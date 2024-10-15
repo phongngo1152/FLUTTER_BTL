@@ -35,6 +35,7 @@ public class CategoryDaoImpl implements CategoryDAO{
 		}
 		return null;
 	}
+	
 
 	@Override
 	public boolean insertCates(Category cate) {
@@ -114,4 +115,45 @@ public class CategoryDaoImpl implements CategoryDAO{
 		return false;
 	}
 	
+	@Override
+	public List<Category> getListCategoryAPI() {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List list = session.createQuery("from Category where status = 1").list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			// TODO: handle exception
+			System.out.println("Loi bat dau tu day");
+			e.printStackTrace();
+			
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return null;
+	}
+	
+	@Override
+	public Category findByCateIdAPI(Integer categoryId) {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    try {
+	        session.beginTransaction();
+	        Category cate = session.createQuery("from Category c where c.categoryId = :categoryId and c.status = 1", Category.class)
+	                .setParameter("categoryId", categoryId)
+	                .uniqueResult();
+	        session.getTransaction().commit();
+	        return cate;
+	    } catch (Exception e) {
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return null;
+	}
 }

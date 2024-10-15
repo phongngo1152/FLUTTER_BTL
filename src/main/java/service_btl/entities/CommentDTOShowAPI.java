@@ -6,8 +6,7 @@ public class CommentDTOShowAPI {
 	private Integer commentId;
 	private String content;
 	private AccountDTOShowAPI account;
-	private Integer storyId;
-	private String storyName;
+	private StoryDTOShowAPI story;
 	// Only store the Account ID // Only store the Story ID
 
 
@@ -17,12 +16,11 @@ public class CommentDTOShowAPI {
 	}
 
 	// Constructor with all fields
-	public CommentDTOShowAPI(Integer commentId, String content, AccountDTOShowAPI account, Integer storyId, String storyName) {
+	public CommentDTOShowAPI(Integer commentId, String content, AccountDTOShowAPI account, StoryDTOShowAPI story) {
 		this.commentId = commentId;
 		this.content = content;
 		this.account = account;
-		this.storyId = storyId;
-		this.storyName = storyName;
+		this.story = story;
 	}
 
 	// Getters and Setters
@@ -50,21 +48,13 @@ public class CommentDTOShowAPI {
 		this.account = account;
 	}
 
-
-	
-	public Integer getStoryId() {
-		return storyId;
+	public StoryDTOShowAPI getStory() {
+		return story;
 	}
 
-	public void setStoryId(Integer content) {
-		this.storyId = storyId;
-	}
-
-	public String getStoryName() {
-		return storyName;
+	public void setStory(StoryDTOShowAPI story) {
+		this.story = story;
 	}
 	
-	public void setStoryName(String storyName) {
-		this.storyName = storyName;
-	}
+	
 }

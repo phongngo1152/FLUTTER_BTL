@@ -1,7 +1,9 @@
 package service_btl.Service;
 
+import java.sql.Date;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import javax.ws.rs.Consumes;
@@ -27,18 +29,29 @@ import service_btl.Impl.StoryDaoImpl;
 import service_btl.Impl.ViewDaoImpl;
 import service_btl.entities.Account;
 import service_btl.entities.AccountDTO;
+import service_btl.entities.AccountDTOShowAPI;
 import service_btl.entities.Author;
 import service_btl.entities.AuthorDTO;
+import service_btl.entities.AuthorDTOShowAPI;
 import service_btl.entities.Category;
 import service_btl.entities.CategoryDTO;
+import service_btl.entities.CategoryDTOShowAPI;
 import service_btl.entities.Chapter;
 import service_btl.entities.ChapterDTO;
+import service_btl.entities.ChapterDTOShowAPI;
 import service_btl.entities.Comment;
 import service_btl.entities.CommentDTO;
+import service_btl.entities.CommentDTOInsertAPI;
+import service_btl.entities.CommentDTOShowAPI;
 import service_btl.entities.Favorite;
 import service_btl.entities.FavoriteDTO;
+import service_btl.entities.FavoriteDTOInsertAPI;
+import service_btl.entities.FavoriteDTOShowAPI;
+import service_btl.entities.LoginDTOAPIFlutter;
+import service_btl.entities.RegisterDTOAPIFlutter;
 import service_btl.entities.Story;
 import service_btl.entities.StoryDTO;
+import service_btl.entities.StoryDTOShowAPI;
 import service_btl.entities.View;
 import service_btl.entities.ViewDTO;
 
@@ -61,7 +74,6 @@ public class Service_btl {
 		return data;
 
 	}
-	
 
 	@GET
 	@Path("/Account/{id}")
@@ -75,6 +87,64 @@ public class Service_btl {
 		String data = gson.toJson(adto);
 		return data;
 	}
+	
+	
+	@GET
+	@Path("/CheckAccountByUserName/{username}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String checkAccountByUserName(@PathParam("username") String username) {
+		Gson gson = new Gson();
+		boolean success = new AccountDaoImpl().checkByUserName(username);
+		
+		return gson.toJson(success);
+	}
+
+	@GET
+	@Path("/CheckAccountByEmail/{email}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String checkAccountByUserEmail(@PathParam("email") String email) {
+		Gson gson = new Gson();
+		boolean success = new AccountDaoImpl().checkByUserEmail(email);
+		
+		return gson.toJson(success);
+	}
+	
+	
+	@POST
+	@Path("/Register")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String registerFultter(String accountData) {
+		Gson gson = new Gson();
+		RegisterDTOAPIFlutter objDTO = gson.fromJson(accountData, RegisterDTOAPIFlutter.class);
+
+		boolean success = new AccountDaoImpl().registerFlutter(objDTO);
+
+		if (success) {
+	        return gson.toJson("Thêm account thành công");
+	    } else {
+	        return gson.toJson("Thêm account thất bại");
+	    }
+	}
+	
+	
+	@POST
+	@Path("/LoginFlutter")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public String loginFultter(String accountData) {
+		Gson gson = new Gson();
+		LoginDTOAPIFlutter objDTO = gson.fromJson(accountData, LoginDTOAPIFlutter.class);
+
+		Account data = new AccountDaoImpl().loginAPIFlutter(objDTO);
+
+		
+		AccountDTOShowAPI dataDto = new AccountDTOShowAPI(data.getAcId(), data.getUserName(), data.getEmail());
+		
+	    return gson.toJson(dataDto);
+	}
+	
+	
+
+	
 
 	@POST
 	@Path("/Account")
@@ -190,12 +260,12 @@ public class Service_btl {
 	@Path("/Categories")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAllCategory() {
-		List<Category> cateList = new CategoryDaoImpl().getListCategory();
+		List<Category> cateList = new CategoryDaoImpl().getListCategoryAPI();
 		Gson gson = new Gson();
-		List<CategoryDTO> chapterDTOList = new ArrayList<>();
+		List<CategoryDTOShowAPI> chapterDTOList = new ArrayList<>();
 
 		for (Category cate : cateList) {
-			CategoryDTO cateDTO = new CategoryDTO(cate.getCategoryId(),cate.getName(), cate.getDescription(), cate.getStatus(), cate.getCreateAt(), cate.getUpdateAt());
+			CategoryDTOShowAPI cateDTO = new CategoryDTOShowAPI(cate.getCategoryId(),cate.getName(), cate.getDescription());
 			chapterDTOList.add(cateDTO);
 		}
 
@@ -205,7 +275,7 @@ public class Service_btl {
 	@Path("/Categories/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCateById(@PathParam("id") Integer id) {
-		Category cate = new CategoryDaoImpl().findByCateId(id);
+		Category cate = new CategoryDaoImpl().findByCateIdAPI(id);
 		Gson gson = new Gson();
 
 		CategoryDTO cateDTO = new CategoryDTO(cate.getCategoryId(), cate.getName(), cate.getDescription(),
@@ -254,58 +324,335 @@ public class Service_btl {
 	}
 	
 	// Stories
+	//giang
 	@GET
 	@Path("Story")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getAllStory() {
-		List<Story> storyList = new StoryDaoImpl().getAllStory();
-		Gson gson = new Gson();
-		List<StoryDTO> storyDTOList = new ArrayList<>();
+		 	List<Story> storyList = new StoryDaoImpl().getStoryAPI();
+		    Gson gson = new Gson();
+		    List<StoryDTOShowAPI> storyDTOList = new ArrayList<>();
+		    
+		    
 
-		for (Story story : storyList) {
-			StoryDTO storyDTO = new StoryDTO(story.getStoryId(), story.getTitle(),
-					story.getDescription(), story.getCoverImage(), story.getCreateAt(), story.getUpdateAt(),
-					story.getStatus(), story.getAuthor().getAuthorId(), story.getCategory().getCategoryId() // Map storyId
-			);
-			storyDTOList.add(storyDTO);
-		}
+		    for (Story story : storyList) {
+		    	
+		        // Mapping Author
+		        AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+		            story.getAuthor().getAuthorId(),
+		            story.getAuthor().getName(),
+		            story.getAuthor().getBio()
+		        );
 
-		return gson.toJson(storyDTOList);
+		        // Mapping Category
+		        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+		            story.getCategory().getCategoryId(),
+		            story.getCategory().getName(),
+		            story.getCategory().getDescription()
+		        );
+		        
+		        
+		        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+		        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+		        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+		        // Creating StoryDTO
+		        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+		            story.getStoryId(),
+		            story.getTitle(),
+		            story.getDescription(),
+		            story.getCoverImage(),
+		            authorDTO, 
+		            categoryDTO,
+		            chapterList.size(), // Total number of chapters
+		            commentList.size(), // Total number of comments
+		            favoriteList.size()
+		        );
+
+		        storyDTOList.add(storyDTO);
+		    }
+
+		    return gson.toJson(storyDTOList);
 	}
 
+	@GET
+	@Path("/StoryByName/{name}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getStoryByName(@PathParam("name") String name) {
+		 	List<Story> storyList = new StoryDaoImpl().findByStoryName(name);
+		    Gson gson = new Gson();
+		    List<StoryDTOShowAPI> storyDTOList = new ArrayList<>();
+		    
+		    
+
+		    for (Story story : storyList) {
+		    	
+		        // Mapping Author
+		        AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+		            story.getAuthor().getAuthorId(),
+		            story.getAuthor().getName(),
+		            story.getAuthor().getBio()
+		        );
+
+		        // Mapping Category
+		        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+		            story.getCategory().getCategoryId(),
+		            story.getCategory().getName(),
+		            story.getCategory().getDescription()
+		        );
+		        
+		        
+		        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+		        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+		        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+		        // Creating StoryDTO
+		        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+		            story.getStoryId(),
+		            story.getTitle(),
+		            story.getDescription(),
+		            story.getCoverImage(),
+		            authorDTO, 
+		            categoryDTO,
+		            chapterList.size(), // Total number of chapters
+		            commentList.size(), // Total number of comments
+		            favoriteList.size()
+		        );
+
+		        storyDTOList.add(storyDTO);
+		    }
+
+		    return gson.toJson(storyDTOList);
+	}
+	
+	@GET
+	@Path("GetUpToDownStoryTop5")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getStoryUpToDown() {
+		List<Story> storyList = new StoryDaoImpl().getTop5StoryNew();
+	    Gson gson = new Gson();
+	    List<StoryDTOShowAPI> storyDTOList = new ArrayList<>();
+
+		for (Story story : storyList) {
+	    	
+	        // Mapping Author
+	        AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+	            story.getAuthor().getAuthorId(),
+	            story.getAuthor().getName(),
+	            story.getAuthor().getBio()
+	        );
+
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        
+	        
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteList.size()
+	        );
+
+	        storyDTOList.add(storyDTO);
+	    }
+
+
+	    return gson.toJson(storyDTOList);
+	}
+	
+	@GET
+	@Path("GetFavotireStoryTop5")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getStoryFavorite() {
+		List<Story> storyList = new StoryDaoImpl().getTop5StoryFavorite();
+	    Gson gson = new Gson();
+	    List<StoryDTOShowAPI> storyDTOList = new ArrayList<>();
+
+for (Story story : storyList) {
+	    	
+	        // Mapping Author
+	        AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+	            story.getAuthor().getAuthorId(),
+	            story.getAuthor().getName(),
+	            story.getAuthor().getBio()
+	        );
+
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        
+	        
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteList.size()
+	        );
+
+	        storyDTOList.add(storyDTO);
+	    }
+
+
+	    return gson.toJson(storyDTOList);
+	}
+	
+	
 	@GET
 	@Path("/Story/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getStoryById(@PathParam("id") Integer id) {
-		Story story = new StoryDaoImpl().findByStoryId(id);
+		Story story = new StoryDaoImpl().findByStoryIdAPI(id);
 		Gson gson = new Gson();
+		
+			AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+		            story.getAuthor().getAuthorId(),
+		            story.getAuthor().getName(),
+		            story.getAuthor().getBio()
+		        );
 
-		StoryDTO storyDTO = new StoryDTO(story.getStoryId(), story.getTitle(),
-				story.getDescription(), story.getCoverImage(), story.getCreateAt(), story.getUpdateAt(),
-				story.getStatus(), story.getAuthor().getAuthorId(), story.getCategory().getCategoryId() // Map storyId
-		);
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteList.size()
+	        );
 		return gson.toJson(storyDTO);
 	}
 
 	@GET
 	@Path("/Story/Category/{CategoryId}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public String getStoryByStoryId(@PathParam("CategoryId") Integer storyId) {
-		List<Story> chapterList = new StoryDaoImpl().getStorysbyCategoryId(storyId);
+	public String getStoryByCategoryId(@PathParam("CategoryId") Integer categoryId) {
+		List<Story> storyList = new StoryDaoImpl().getStorysbyCategoryId(categoryId);
 		Gson gson = new Gson();
-		List<StoryDTO> storyDTOList = new ArrayList<>();
+		List<StoryDTOShowAPI> storyDTOList = new ArrayList<>();
 
-		for (Story story : chapterList) {
-			StoryDTO storyDTO = new StoryDTO(story.getStoryId(), story.getTitle(),
-					story.getDescription(), story.getCoverImage(), story.getCreateAt(), story.getUpdateAt(),
-					story.getStatus(), story.getAuthor().getAuthorId(), story.getCategory().getCategoryId() // Map storyId
-			);
-			storyDTOList.add(storyDTO);
-		}
+		for (Story story : storyList) {
+	    	
+	        // Mapping Author
+	        AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+	            story.getAuthor().getAuthorId(),
+	            story.getAuthor().getName(),
+	            story.getAuthor().getBio()
+	        );
 
-		return gson.toJson(storyDTOList);
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        
+	        
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteList.size()
+	        );
+
+	        storyDTOList.add(storyDTO);
+	    }
+
+
+	    return gson.toJson(storyDTOList);
+	}
+	
+	@GET
+	@Path("/Story/Author/{AuthorId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getStoryByAuthorId(@PathParam("AuthorId") Integer authorId) {
+		List<Story> storyList = new StoryDaoImpl().getStorysbyAuthorId(authorId);
+		Gson gson = new Gson();
+		List<StoryDTOShowAPI> storyDTOList = new ArrayList<>();
+
+		for (Story story : storyList) {
+	    	
+	        // Mapping Author
+	        AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+	            story.getAuthor().getAuthorId(),
+	            story.getAuthor().getName(),
+	            story.getAuthor().getBio()
+	        );
+
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        
+	        
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteList.size()
+	        );
+
+	        storyDTOList.add(storyDTO);
+	    }
+
+	    return gson.toJson(storyDTOList);
 	}
 
+	
 	@POST
 	@Path("/Story")
 	@Consumes(MediaType.APPLICATION_JSON)
@@ -386,26 +733,24 @@ public class Service_btl {
 		Chapter chapter = new ChapterDaoImpl().findByChapterId(id);
 		Gson gson = new Gson();
 
-		ChapterDTO chapterDTO = new ChapterDTO(chapter.getChapterId(), chapter.getChapterTitle(), chapter.getContent(),
-				chapter.getChapterNumber(), chapter.getCreateAt(), chapter.getUpdateAt(), chapter.getStatus(),
-				chapter.getStory().getStoryId() // Map storyId
+		ChapterDTOShowAPI chapterDTO = new ChapterDTOShowAPI(chapter.getChapterId(), chapter.getChapterTitle(), chapter.getContent(),
+				chapter.getChapterNumber() // Map storyId
 		);
 
 		return gson.toJson(chapterDTO);
 	}
 
 	@GET
-	@Path("/Chapter/story/{storyId}")
+	@Path("/Chapter/Story/{storyId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getChaptersByStoryId(@PathParam("storyId") Integer storyId) {
 		List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(storyId);
 		Gson gson = new Gson();
-		List<ChapterDTO> chapterDTOList = new ArrayList<>();
+		List<ChapterDTOShowAPI> chapterDTOList = new ArrayList<>();
 
 		for (Chapter chapter : chapterList) {
-			ChapterDTO chapterDTO = new ChapterDTO(chapter.getChapterId(), chapter.getChapterTitle(),
-					chapter.getContent(), chapter.getChapterNumber(), chapter.getCreateAt(), chapter.getUpdateAt(),
-					chapter.getStatus(), chapter.getStory().getStoryId());
+			ChapterDTOShowAPI chapterDTO = new ChapterDTOShowAPI(chapter.getChapterId(), chapter.getChapterTitle(),
+					chapter.getContent(), chapter.getChapterNumber());
 			chapterDTOList.add(chapterDTO);
 		}
 
@@ -477,24 +822,114 @@ public class Service_btl {
 	}
 
 	@GET
-	@Path("/Comment/story/{storyId}")
+	@Path("/Comment/Story/{storyId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getCommentsByStoryId(@PathParam("storyId") Integer storyId) {
 		List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(storyId);
 		Gson gson = new Gson();
-		List<CommentDTO> commentDTOList = new ArrayList<>();
+		List<CommentDTOShowAPI> commentDTOList = new ArrayList<>();
 
 		for (Comment comment : commentList) {
-			CommentDTO commentDTO = new CommentDTO(comment.getCommentId(), comment.getAccount().getAcId(), // Map
-																											// accountId
-					comment.getStory().getStoryId(), // Map storyId
-					comment.getChapter().getChapterId(), // Map chapterId
-					comment.getContent(), comment.getCreateAt(), comment.getUpdateAt(), comment.getStatus());
+			
+			AccountDTOShowAPI accountDTO = new AccountDTOShowAPI(
+					comment.getAccount().getAcId(),
+					comment.getAccount().getUserName(),
+					comment.getAccount().getEmail()
+		        );
+			Story story = new StoryDaoImpl().findByStoryId(comment.getStory().getStoryId());
+			
+			
+			
+			AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+		            story.getAuthor().getAuthorId(),
+		            story.getAuthor().getName(),
+		            story.getAuthor().getBio()
+		        );
+
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentListStory = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteList.size()
+	        );
+			
+			CommentDTOShowAPI commentDTO = new CommentDTOShowAPI(comment.getCommentId(), comment.getContent(), accountDTO, storyDTO);
 			commentDTOList.add(commentDTO);
 		}
 
 		return gson.toJson(commentDTOList);
 	}
+	
+	@GET
+	@Path("/Comment/User/{userId}")
+	@Produces(MediaType.APPLICATION_JSON)
+	public String getCommentsByUserId(@PathParam("userId") Integer userId) {
+		List<Comment> commentList = new CommentDaoImpl().getCommentsbyUserId(userId);
+		Gson gson = new Gson();
+		List<CommentDTOShowAPI> commentDTOList = new ArrayList<>();
+
+		for (Comment comment : commentList) {
+			
+			AccountDTOShowAPI accountDTO = new AccountDTOShowAPI(
+					comment.getAccount().getAcId(),
+					comment.getAccount().getUserName(),
+					comment.getAccount().getUserName()
+		        );
+			Story story = new StoryDaoImpl().findByStoryId(comment.getStory().getStoryId());
+			
+			
+			
+			AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+		            story.getAuthor().getAuthorId(),
+		            story.getAuthor().getName(),
+		            story.getAuthor().getBio()
+		        );
+
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentListStory = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteList.size()
+	        );
+			
+			CommentDTOShowAPI commentDTO = new CommentDTOShowAPI(comment.getCommentId(), comment.getContent(), accountDTO, storyDTO);
+			commentDTOList.add(commentDTO);
+		}
+
+		return gson.toJson(commentDTOList);
+	}
+	
+	
 
 	@GET
 	@Path("/Comment/{id}")
@@ -510,30 +945,25 @@ public class Service_btl {
 		return gson.toJson(commentDTO);
 	}
 
+	
 	@POST
 	@Path("/Comment")
-
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String insertComment(String commentData) {
-		Gson gson = new Gson();
-		CommentDTO commentDTO = gson.fromJson(commentData, CommentDTO.class);
+	    Gson gson = new Gson();
+	    CommentDTOInsertAPI commentDTO = gson.fromJson(commentData, CommentDTOInsertAPI.class);
 
-		Account account = new Account();
-		account.setAcId(commentDTO.getAccountId());
+	    boolean success = new CommentDaoImpl().insertCommentAPI(commentDTO);
 
-		Story story = new Story();
-		story.setStoryId(commentDTO.getStoryId());
-
-		Chapter chapter = new Chapter();
-		chapter.setChapterId(commentDTO.getChapterId());
-
-		Comment comment = new Comment(commentDTO.getCommentId(), account, story, chapter, commentDTO.getContent(),
-				commentDTO.getCreateAt(), commentDTO.getUpdateAt(), commentDTO.getStatus());
-
-		boolean success = new CommentDaoImpl().insertComment(comment);
-		return gson.toJson(success);
+	    if (success) {
+	        return gson.toJson("Thêm comment thành công");
+	    } else {
+	        return gson.toJson("Thêm comment thất bại");
+	    }
 	}
 
+	
+	
 	@PUT
 	@Path("/Comment")
 
@@ -558,6 +988,7 @@ public class Service_btl {
 		return gson.toJson(success);
 	}
 
+	
 	@DELETE
 	@Path("/Comment/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
@@ -601,17 +1032,56 @@ public class Service_btl {
 	}
 
 	@GET
-	@Path("Favorite/user/{userId}")
+	@Path("/Favorite/User/{userId}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public String getFavoritesByUserId(@PathParam("userId") Integer userId) {
 		List<Favorite> favoriteList = new FavoriteDaoImpl().getFavouritesbyUserId(userId);
 		Gson gson = new Gson();
-		List<FavoriteDTO> favoriteDTOList = new ArrayList<>();
+		List<FavoriteDTOShowAPI> favoriteDTOList = new ArrayList<>();
 
+		
 		for (Favorite favorite : favoriteList) {
-			FavoriteDTO favoriteDTO = new FavoriteDTO(favorite.getFavoriteId(), favorite.getAccount().getAcId(),
-					favorite.getStory().getStoryId(), favorite.getCreateAt(), favorite.getUpdateAt(),
-					favorite.getStatus());
+			
+			AccountDTOShowAPI accountDTO = new AccountDTOShowAPI(
+				favorite.getAccount().getAcId(),
+				favorite.getAccount().getUserName(),
+				favorite.getAccount().getEmail()
+	        );
+			
+			Story story = new StoryDaoImpl().findByStoryId(favorite.getStory().getStoryId());
+			
+			
+			
+			AuthorDTOShowAPI authorDTO = new AuthorDTOShowAPI(
+		            story.getAuthor().getAuthorId(),
+		            story.getAuthor().getName(),
+		            story.getAuthor().getBio()
+		        );
+
+	        // Mapping Category
+	        CategoryDTOShowAPI categoryDTO = new CategoryDTOShowAPI(
+	            story.getCategory().getCategoryId(),
+	            story.getCategory().getName(),
+	            story.getCategory().getDescription()
+	        );
+	        List<Chapter> chapterList = new ChapterDaoImpl().getChaptersbyStoryId(story.getStoryId());
+	        List<Comment> commentList = new CommentDaoImpl().getCommentbyStoryId(story.getStoryId());   
+	        List<Favorite> favoriteListStory = new FavoriteDaoImpl().getFavouriteStoryId(story.getStoryId());
+	        // Creating StoryDTO
+	        StoryDTOShowAPI storyDTO = new StoryDTOShowAPI(
+	            story.getStoryId(),
+	            story.getTitle(),
+	            story.getDescription(),
+	            story.getCoverImage(),
+	            authorDTO, 
+	            categoryDTO,
+	            chapterList.size(), // Total number of chapters
+	            commentList.size(), // Total number of comments
+	            favoriteListStory.size()
+	        );
+			
+			
+			FavoriteDTOShowAPI favoriteDTO = new FavoriteDTOShowAPI(favorite.getFavoriteId(), accountDTO, storyDTO);
 			favoriteDTOList.add(favoriteDTO);
 		}
 
@@ -623,20 +1093,20 @@ public class Service_btl {
 	@Consumes(MediaType.APPLICATION_JSON)
 	public String insertFavorite(String favoriteData) {
 		Gson gson = new Gson();
-		FavoriteDTO favoriteDTO = gson.fromJson(favoriteData, FavoriteDTO.class);
+		FavoriteDTOInsertAPI favoriteDTO = gson.fromJson(favoriteData, FavoriteDTOInsertAPI.class);
+		
+		
+		
+	    boolean success = new FavoriteDaoImpl().insertFavouriteAPI(favoriteDTO);
 
-		Account account = new Account();
-		account.setAcId(favoriteDTO.getAccountId());
-
-		Story story = new Story();
-		story.setStoryId(favoriteDTO.getStoryId());
-
-		Favorite favorite = new Favorite(favoriteDTO.getFavoriteId(), account, story, favoriteDTO.getCreateAt(),
-				favoriteDTO.getUpdateAt(), favoriteDTO.getStatus());
-
-		boolean success = new FavoriteDaoImpl().insertFavourites(favorite);
-		return gson.toJson(success);
+	    if (success) {
+	        return gson.toJson("Thêm favorite thành công");
+	    } else {
+	        return gson.toJson("Thêm favorite thất bại");
+	    }
+	    
 	}
+	
 
 	@PUT
 	@Path("/Favorite")

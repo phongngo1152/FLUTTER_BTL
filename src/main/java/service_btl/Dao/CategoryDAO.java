@@ -15,4 +15,7 @@ public interface CategoryDAO {
 	public Category findByCateId(Integer categoryId);
 
 	public boolean deleteCate(Integer categoryId);
+	
+	public List<Category> getListCategoryAPI();
+	public Category findByCateIdAPI(Integer categoryId);
 }

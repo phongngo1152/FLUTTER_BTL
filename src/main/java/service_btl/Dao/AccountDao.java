@@ -5,6 +5,8 @@ import java.util.List;
 import javax.management.relation.Role;
 
 import service_btl.entities.Account;
+import service_btl.entities.LoginDTOAPIFlutter;
+import service_btl.entities.RegisterDTOAPIFlutter;
 
 public interface AccountDao {
 	public List<Account> getAllUser();
@@ -24,4 +26,12 @@ public interface AccountDao {
 	public List<Account> getAccbyrRole(Integer role);
 
 	public Account checklogin(String username, String password);
+	
+	
+	public boolean checkByUserName(String username);
+	public boolean checkByUserEmail(String email);
+	
+	
+	public Account loginAPIFlutter(LoginDTOAPIFlutter loginDTO);
+	public boolean registerFlutter(RegisterDTOAPIFlutter register);
 }

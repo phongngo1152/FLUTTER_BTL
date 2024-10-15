@@ -3,6 +3,7 @@ package service_btl.Dao;
 import java.util.List;
 
 import service_btl.entities.Comment;
+import service_btl.entities.CommentDTOInsertAPI;
 
 public interface CommentDao {
 	public List<Comment> getAllComment();
@@ -20,5 +21,9 @@ public interface CommentDao {
 	public List<Comment> getCommentbyStoryId(Integer storyId);
 	
 	public List<Comment> getCommentbyAccId(Integer accId);
+	
+	public List<Comment> getCommentsbyUserId(Integer accId);
+	
+	public boolean insertCommentAPI(CommentDTOInsertAPI comment);
 
 }
