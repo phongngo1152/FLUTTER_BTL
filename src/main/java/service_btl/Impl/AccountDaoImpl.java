@@ -19,6 +19,23 @@ import service_btl.hibernate.util.HibernateUtil;
 
 @Repository
 public class AccountDaoImpl implements AccountDao {
+	
+	public void saveAdminAccount(Account account) {
+		System.out.println("Saving account: " + account.getUserName());
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            session.save(account);
+            session.getTransaction().commit();
+            System.out.println("Account saved successfully!");
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 
 	@Override
 	public List<Account> getAllUser() {
@@ -69,6 +86,8 @@ public class AccountDaoImpl implements AccountDao {
 		}
 		return false;
 	}
+	
+	
 
 	@Override
 	public boolean updateser(Account account) {
@@ -268,6 +287,7 @@ public class AccountDaoImpl implements AccountDao {
 	
 	
 	public boolean checkByUserName(String username) {
+		System.out.println("Checking if user exists: " + username);
 	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	    Session session = sessionFactory.openSession();
 	    try {

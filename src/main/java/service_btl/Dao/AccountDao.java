@@ -34,4 +34,6 @@ public interface AccountDao {
 	
 	public Account loginAPIFlutter(LoginDTOAPIFlutter loginDTO);
 	public boolean registerFlutter(RegisterDTOAPIFlutter register);
+	public void saveAdminAccount(Account account);
+	
 }
