@@ -16,106 +16,109 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "authors")
 public class Author {
-    @Id
-    @Column(name = "authorId")
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer authorId;
+	@Id
+	@Column(name = "authorId")
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	private Integer authorId;
 
-    @Column(name = "name")
-    private String name;
+	@Column(name = "name")
+	private String name;
 
-    @Column(name = "bio")
-    private String bio;
+	@Column(name = "bio")
+	private String bio;
 
-    @Column(name = "create_at")
-    private Date createAt;
+	@Column(name = "create_at")
+	private Date createAt;
 
-    @Column(name = "update_at")
-    private Date updateAt;
+	@Column(name = "update_at")
+	private Date updateAt;
 
-    @Column(name = "status")
-    private Integer status;
+	@Column(name = "status")
+	private Integer status;
 
-    @OneToMany(mappedBy = "author",fetch = FetchType.EAGER)
-    private Set<Story> stories;
+	@OneToMany(mappedBy = "author", fetch = FetchType.EAGER)
+	private Set<Story> stories;
 
-    public Author() {
-        super();
-    }
-    public Author(Integer authorId, String name, String bio, Date createAt, Date updateAt, int status) {
-        this.authorId = authorId;
-        this.name = name;
-        this.bio = bio;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.status = status;
-       
-    }
-    public Author(Integer authorId, String name, String bio, Date createAt, Date updateAt, Integer status, Set<Story> stories) {
-        super();
-        this.authorId = authorId;
-        this.name = name;
-        this.bio = bio;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.status = status;
-        this.stories = stories;
-    }
+	public Author() {
+		super();
+	}
 
-    // Getters and Setters
-    public Integer getAuthorId() {
-        return authorId;
-    }
+	public Author(Integer authorId, String name, String bio, Date createAt, Date updateAt, int status) {
+		this.authorId = authorId;
+		this.name = name;
+		this.bio = bio;
+		this.createAt = createAt;
+		this.updateAt = updateAt;
+		this.status = status;
 
-    public void setAuthorId(Integer authorId) {
-        this.authorId = authorId;
-    }
+	}
 
-    public String getName() {
-        return name;
-    }
+	public Author(Integer authorId, String name, String bio, Date createAt, Date updateAt, Integer status,
+			Set<Story> stories) {
+		super();
+		this.authorId = authorId;
+		this.name = name;
+		this.bio = bio;
+		this.createAt = createAt;
+		this.updateAt = updateAt;
+		this.status = status;
+		this.stories = stories;
+	}
 
-    public void setName(String name) {
-        this.name = name;
-    }
+	// Getters and Setters
+	public Integer getAuthorId() {
+		return authorId;
+	}
 
-    public String getBio() {
-        return bio;
-    }
+	public void setAuthorId(Integer authorId) {
+		this.authorId = authorId;
+	}
 
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
+	public String getName() {
+		return name;
+	}
 
-    public Date getCreateAt() {
-        return createAt;
-    }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public void setCreateAt(Date createAt) {
-        this.createAt = createAt;
-    }
+	public String getBio() {
+		return bio;
+	}
 
-    public Date getUpdateAt() {
-        return updateAt;
-    }
+	public void setBio(String bio) {
+		this.bio = bio;
+	}
 
-    public void setUpdateAt(Date updateAt) {
-        this.updateAt = updateAt;
-    }
+	public Date getCreateAt() {
+		return createAt;
+	}
 
-    public Integer getStatus() {
-        return status;
-    }
+	public void setCreateAt(Date createAt) {
+		this.createAt = createAt;
+	}
 
-    public void setStatus(Integer status) {
-        this.status = status;
-    }
+	public Date getUpdateAt() {
+		return updateAt;
+	}
 
-    public Set<Story> getStories() {
-        return stories;
-    }
+	public void setUpdateAt(Date updateAt) {
+		this.updateAt = updateAt;
+	}
 
-    public void setStories(Set<Story> stories) {
-        this.stories = stories;
-    }
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+	public Set<Story> getStories() {
+		return stories;
+	}
+
+	public void setStories(Set<Story> stories) {
+		this.stories = stories;
+	}
 }

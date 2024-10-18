@@ -4,8 +4,10 @@ import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Set;
 
+import javax.persistence.CascadeType;
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
@@ -17,62 +19,101 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "categories")
 public class Category {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "categoryId")
-    private Integer categoryId;
+	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "categoryId")
+	private Integer categoryId;
 
-    @Column(name = "name")
-    private String name;
+	@Column(name = "name")
+	private String name;
 
-    @Column(name = "description")
-    private String description;
+	@Column(name = "description")
+	private String description;
 
-    @Column(name = "create_at")
-    private Date createAt;
+	@Column(name = "create_at")
+	private Date createAt;
 
-    @Column(name = "update_at")
-    private Date updateAt;
+	@Column(name = "update_at")
+	private Date updateAt;
 
-    @Column(name = "status")
-    private Integer status;
+	@Column(name = "status")
+	private Integer status;
 
-    @OneToMany(mappedBy = "category")
-    private Set<Story> stories;
+//	@OneToMany(mappedBy = "category")
+//	private Set<Story> stories;
 
-    // Default constructor
-    public Category() {}
+	// Default constructor
+	public Category() {
+	}
 
-    // Constructor with all fields
-    public Category(Integer categoryId, String name, String description, Date createAt, Date updateAt, int status) {
-        this.categoryId = categoryId;
-        this.name = name;
-        this.description = description;
-        this.createAt = createAt;
-        this.updateAt = updateAt;
-        this.status = status;
-    }
+	public Category(Integer categoryId, String name, String description, Date createAt, Date updateAt, Integer status
+//	Set<Story> stories
+			) {
+		super();
+		this.categoryId = categoryId;
+		this.name = name;
+		this.description = description;
+		this.createAt = createAt;
+		this.updateAt = updateAt;
+		this.status = status;
+//		this.stories = stories;
+	}
 
-    // Getters and Setters
-    public Integer getCategoryId() { return categoryId; }
-    public void setCategoryId(Integer categoryId) { this.categoryId = categoryId; }
+	public Integer getCategoryId() {
+		return categoryId;
+	}
 
-    public String getName() { return name; }
-    public void setName(String name) { this.name = name; }
+	public void setCategoryId(Integer categoryId) {
+		this.categoryId = categoryId;
+	}
 
-    public String getDescription() { return description; }
-    public void setDescription(String description) { this.description = description; }
+	public String getName() {
+		return name;
+	}
 
-    public Date getCreateAt() { return createAt; }
-    public void setCreateAt(Date createAt) { this.createAt = createAt; }
+	public void setName(String name) {
+		this.name = name;
+	}
 
-    public Date getUpdateAt() { return updateAt; }
-    public void setUpdateAt(Date updateAt) { this.updateAt = updateAt; }
+	public String getDescription() {
+		return description;
+	}
 
-    public Integer getStatus() { return status; }
+	public void setDescription(String description) {
+		this.description = description;
+	}
 
-	public void setStatus(Integer status) { this.status = status; }
+	public Date getCreateAt() {
+		return createAt;
+	}
 
-    public Set<Story> getStories() { return stories; }
-    public void setStories(Set<Story> stories) { this.stories = stories; }
+	public void setCreateAt(Date createAt) {
+		this.createAt = createAt;
+	}
+
+	public Date getUpdateAt() {
+		return updateAt;
+	}
+
+	public void setUpdateAt(Date updateAt) {
+		this.updateAt = updateAt;
+	}
+
+	public Integer getStatus() {
+		return status;
+	}
+
+	public void setStatus(Integer status) {
+		this.status = status;
+	}
+
+//	public Set<Story> getStories() {
+//		return stories;
+//	}
+//
+//	public void setStories(Set<Story> stories) {
+//		this.stories = stories;
+//	}
+
+	
 }
