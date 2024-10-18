@@ -35,9 +35,26 @@ public class StoryDaoImpl implements StoryDao{
 	}
 
 	@Override
-	public Story findByStoryName(String chapterName) {
-		// TODO Auto-generated method stub
-		return null;
+	public List<Story> findByStoryName(String name) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    List<Story> stories = null; 
+	    try {
+	        session.beginTransaction();
+	        stories = session.createQuery("from Story s where s.title like :name and s.status = 1", Story.class)
+	                .setParameter("name", "%" + name + "%") 
+	                .getResultList();
+	        session.getTransaction().commit();
+	    } catch (Exception e) {
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+	        if (session.getTransaction() != null) {
+	            session.getTransaction().rollback(); 
+	        }
+	    } finally {
+	        session.close();
+	    }
+	    return stories; 
 	}
 
 	@Override
@@ -168,5 +185,120 @@ public class StoryDaoImpl implements StoryDao{
 
 		return null;
 	}
+	
+	
+	@Override
+	public List<Story> getStorysbyAuthorId(Integer authorId) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		try {
+			session.beginTransaction();
+			List list = session.createQuery("from Story where authorId = :authorId and status = 1")
+					.setParameter("authorId", authorId).list();
+			session.getTransaction().commit();
+			return list;
+		} catch (Exception e) {
+			System.out.println("Loi o day");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
 
+		return null;
+	}
+	
+	@Override
+	public Story findByStoryIdAPI(Integer storyId) {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    try {
+	        session.beginTransaction();
+	        Story story = session.createQuery("from Story s where s.storyId = :storyId and s.status = 1", Story.class)
+	                .setParameter("storyId", storyId)
+	                .uniqueResult();
+	        session.getTransaction().commit();
+	        return story;
+	    } catch (Exception e) {
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return null;
+	}
+	
+	@Override
+	public List<Story> getStoryAPI() {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    try {
+	        session.beginTransaction();
+	        List list = session.createQuery("from Story where status = 1").list();
+	        session.getTransaction().commit();
+	        return list;
+	    } catch (Exception e) {
+	        // TODO: handle exception
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return null;
+	}
+	
+	
+	// giang
+	@Override
+	public List<Story> getTop5StoryNew() {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    try {
+	        session.beginTransaction();
+	        List<Story> list = session.createQuery("from Story where status = 1 order by id desc", Story.class)
+	                                  .setMaxResults(5)
+	                                  .list();
+	        session.getTransaction().commit();
+	        return list;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return null;
+	}
+	
+	// giang
+	@Override
+	public List<Story> getTop5StoryFavorite() {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    
+	    try {
+	        session.beginTransaction();
+
+	       
+	        List<Story> list = session.createQuery(
+	                "select s from Story s join Favorite f on s.storyId = f.story.storyId " +
+            		"where s.status = 1 " +
+	                "group by s.storyId, s.title, s.description, s.coverImage, s.createAt, s.updateAt, s.status, s.author, s.category " +
+	                "order by count(f.favoriteId) desc", Story.class)
+	                .setMaxResults(5)
+	                .list();
+	        
+	        session.getTransaction().commit();
+	        return list;
+	    } catch (Exception e) {
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return null;
+	}
+	
 }

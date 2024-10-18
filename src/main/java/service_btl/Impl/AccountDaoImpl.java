@@ -1,17 +1,41 @@
 package service_btl.Impl;
 
+import java.util.Date;
 import java.util.List;
 
+import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
+import org.hibernate.Transaction;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import service_btl.Dao.AccountDao;
 import service_btl.entities.Account;
+import service_btl.entities.LoginDTOAPIFlutter;
+import service_btl.entities.RegisterDTOAPIFlutter;
 import service_btl.hibernate.util.HibernateUtil;
+
 
 @Repository
 public class AccountDaoImpl implements AccountDao {
+	
+	public void saveAdminAccount(Account account) {
+		System.out.println("Saving account: " + account.getUserName());
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+        try {
+            session.beginTransaction();
+            session.save(account);
+            session.getTransaction().commit();
+            System.out.println("Account saved successfully!");
+        } catch (Exception e) {
+            session.getTransaction().rollback();
+            e.printStackTrace();
+        } finally {
+            session.close();
+        }
+    }
 
 	@Override
 	public List<Account> getAllUser() {
@@ -44,13 +68,16 @@ public class AccountDaoImpl implements AccountDao {
 	public boolean insertUser(Account account) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
+		 BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		try {
 			session.beginTransaction();
+			 String hashedPassword = passwordEncoder.encode(account.getPassword());
+			 account.setPassword(hashedPassword);
+
 			session.save(account);
 			session.getTransaction().commit();
 			return true;
 		} catch (Exception e) {
-			// TODO: handle exception
 			System.out.println("Loi bat dau tu day");
 			e.printStackTrace();
 			session.getTransaction().rollback();
@@ -59,13 +86,17 @@ public class AccountDaoImpl implements AccountDao {
 		}
 		return false;
 	}
+	
+	
 
 	@Override
 	public boolean updateser(Account account) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
-
+		BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 		try {
+			String hashedPassword = passwordEncoder.encode(account.getPassword());
+			 account.setPassword(hashedPassword);
 			session.beginTransaction();
 			session.update(account);
 			session.getTransaction().commit();
@@ -127,21 +158,29 @@ public class AccountDaoImpl implements AccountDao {
 
 	@Override
 	public Account checklogin(String username, String password) {
-		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 	    Session session = sessionFactory.openSession();
-	    Account account = null; // Khởi tạo biến account
+	    Account account = null; 
+	    
+	    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	    
 	    try {
 	        session.beginTransaction();
-	        
-	        // Sử dụng HQL để tìm kiếm tài khoản theo tên người dùng và mật khẩu
-	        String hql = "FROM Account WHERE email = :email AND password = :password";
+
+	        String hql = "FROM Account WHERE email = :email";
 	        account = (Account) session.createQuery(hql)
 	                .setParameter("email", username)
-	                .setParameter("password", password)
 	                .uniqueResult();
 	        session.getTransaction().commit();
+
+
 	        if (account != null) {
-	            System.out.println("Đăng nhập thành công: " + account.toString());
+	            if (passwordEncoder.matches(password, account.getPassword())) {
+	                System.out.println("Đăng nhập thành công: " + account.toString());
+	            } else {
+	                System.out.println("Mật khẩu không đúng");
+	                account = null;
+	            }
 	        } else {
 	            System.out.println("Không tìm thấy tài khoản với email: " + username);
 	        }
@@ -152,16 +191,14 @@ public class AccountDaoImpl implements AccountDao {
 	    } finally {
 	        session.close();
 	    }
-	    return account; // Trả về tài khoản nếu tìm thấy, hoặc null nếu không
+	    return account;
 	}
-
 	@Override
 	public List<Account> getAccbyrRole(Integer role) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
 		try {
 			session.beginTransaction();
-			// Thực hiện truy vấn HQL, sử dụng tham số :role để tránh SQL Injection
 	        List<Account> list = session.createQuery("from Account where role = :role", Account.class)
 	                                    .setParameter("role", role)
 	                                    .list();
@@ -197,5 +234,110 @@ public class AccountDaoImpl implements AccountDao {
 			session.close();
 		}
 		return false;
+	}
+	@Override
+	public boolean registerFlutter(RegisterDTOAPIFlutter registerDTO) {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    Transaction transaction = null;
+	    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+	    try {
+	        transaction = session.beginTransaction();
+
+	        String hashedPassword = passwordEncoder.encode(registerDTO.getPassword());
+	        registerDTO.setPassword(hashedPassword);
+	        
+	        Account account = new Account();
+	        account.setUserName(registerDTO.getUserName());
+	        account.setEmail(registerDTO.getEmail());
+	        account.setPassword(hashedPassword);  
+	        account.setRole(2);
+	        account.setCreateAt(new Date());
+	        account.setStatus(1);
+
+	        session.save(account);
+	        transaction.commit();
+	        return true;
+	    } catch (Exception e) {
+	        if (transaction != null) {
+	            transaction.rollback();
+	        }
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
+	    return false;
+	}
+	
+	
+	
+	public Account loginAPIFlutter(LoginDTOAPIFlutter loginDTO) {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    Transaction transaction = null;
+	    BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+
+	    try {
+	        transaction = session.beginTransaction(); 
+
+	        Query<Account> query = session.createQuery("FROM Account WHERE userName = :username AND role = 2 AND status = 1", Account.class);
+	        query.setParameter("username", loginDTO.getUserName());
+	        
+	        Account user = query.uniqueResult();
+	        
+	        if (user != null && passwordEncoder.matches(loginDTO.getPassword(), user.getPassword())) {
+	            transaction.commit();  
+	            return user; 
+	        }
+
+	        transaction.commit();
+	    } catch (Exception e) {
+	        if (transaction != null) {
+	            transaction.rollback();
+	        }
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+	    } finally {
+	        session.close();
+	    }
+	    return null;
+	}
+	
+	public boolean checkByUserName(String username) {
+		System.out.println("Checking if user exists: " + username);
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    try {
+	        Query<Account> query = session.createQuery("FROM Account WHERE userName = :username", Account.class);
+	        query.setParameter("username", username);
+	        Account user = query.uniqueResult();
+	        return user != null;
+	    } catch (Exception e) {
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return false;
+	}
+
+	public boolean checkByUserEmail(String email) {
+	    SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+	    Session session = sessionFactory.openSession();
+	    try {
+	        Query<Account> query = session.createQuery("FROM Account WHERE email = :email", Account.class);
+	        query.setParameter("email", email);
+	        Account user = query.uniqueResult();
+	        return user != null;
+	    } catch (Exception e) {
+	        System.out.println("Lỗi bắt đầu từ đây");
+	        e.printStackTrace();
+	        session.getTransaction().rollback();
+	    } finally {
+	        session.close();
+	    }
+	    return false;
 	}
 }

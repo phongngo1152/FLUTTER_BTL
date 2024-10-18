@@ -80,6 +80,8 @@ public class AdminController {
         model.addAttribute("list",list);
 		return "admin/author_list"; // Trả về trang danh sách tác giả
 	}
+	
+	
 	@RequestMapping(value = "/authors-form")
 	public String formCreateAuthor(HttpSession session, Model model) {
 		Account account = (Account) session.getAttribute("account");
@@ -97,7 +99,7 @@ public class AdminController {
         model.addAttribute("acc",acc);
 		return "admin/author_create"; // Trả về trang danh sách tác giả
 	}
-	
+
 	@PostMapping("/saveAuthor")
 	public String saveAuthor(@ModelAttribute("acc") Account acc, HttpSession session) {
 		Account account = (Account) session.getAttribute("account");
@@ -116,7 +118,7 @@ public class AdminController {
 		accountDao.insertUser(acc);
 		return "redirect:/admin/authors";
 	}
-	
+
 	@RequestMapping(value = "/author-update")
 	public String updateAuthor(HttpSession session) {
 		Account account = (Account) session.getAttribute("account");
@@ -357,11 +359,11 @@ public class AdminController {
         Story storyId = storyDAO.findByStoryId(id);
         if (storyId == null ) {
 			return "notfound";
-		} 
+		}
         Comment cmtId = commentDAO.findByCommentId(cmtI);
         if (cmtId == null ) {
 			return "notfound";
-		} 
+		}
 		List<Comment> cmt = commentDAO.getCommentbyStoryId(id); // add role vào đây
 		model.addAttribute("cmt", cmt);
 		model.addAttribute("cmtId", cmtId);
@@ -385,12 +387,14 @@ public class AdminController {
 		model.addAttribute("cmt", cmt);
 		return "admin/comment_list";
 	}
-	
+
 	 @RequestMapping(value = "/logout")
 	    public String logout(HttpSession session) {
 	        session.invalidate(); // Xóa phiên làm việc
 	        return "redirect:/login"; // Chuyển hướng về trang đăng nhập
 	    }
+	 
+	 
 	    @PostMapping("/login")
 	    public String login(@RequestParam("email") String email, // Thay đổi từ username thành email
 	                        @RequestParam("password") String password,

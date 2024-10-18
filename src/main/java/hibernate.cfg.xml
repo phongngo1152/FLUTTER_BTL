@@ -4,14 +4,20 @@
 	<session-factory name="">
 	
 		<property name="hibernate.connection.driver_class">
-			com.microsoft.sqlserver.jdbc.SQLServerDriver</property>
+			com.microsoft.sqlserver.jdbc.SQLServerDriver
+		</property>
 		<property name="hibernate.connection.url">
-			jdbc:sqlserver://localhost:1433;databaseName=DB_APP_STORYY</property>
+			jdbc:sqlserver://localhost:1433;databaseName=DB_APP_STORYY
+		</property>
 		<property name="hibernate.connection.username">sa</property>
-		<property name="hibernate.connection.password">1234$</property>
+		<property name="hibernate.connection.password">12345</property>
 		<property name="hibernate.dialect">
-			org.hibernate.dialect.SQLServer2012Dialect</property>
+			org.hibernate.dialect.SQLServer2012Dialect
+		</property>
+		
 		<property name="hibernate.show_sql">true</property>
+		<property name="hibernate.format_sql">true</property>
+		 
 		<mapping class="service_btl.entities.Author" />
 		<mapping class="service_btl.entities.Account" />
 		<mapping class="service_btl.entities.Category" />
