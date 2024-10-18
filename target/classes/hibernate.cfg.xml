@@ -10,7 +10,7 @@
 			jdbc:sqlserver://localhost:1433;databaseName=DB_APP_STORYY
 		</property>
 		<property name="hibernate.connection.username">sa</property>
-		<property name="hibernate.connection.password">12345</property>
+		<property name="hibernate.connection.password">1234$</property>
 		<property name="hibernate.dialect">
 			org.hibernate.dialect.SQLServer2012Dialect
 		</property>

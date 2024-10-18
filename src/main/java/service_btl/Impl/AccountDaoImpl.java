@@ -220,7 +220,6 @@ public class AccountDaoImpl implements AccountDao {
 	public boolean updateStatus(Account account) {
 		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
 		Session session = sessionFactory.openSession();
-		account.setStatus(0);
 		try {
 			session.beginTransaction();
 			session.update(account);

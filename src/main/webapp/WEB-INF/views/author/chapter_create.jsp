@@ -39,15 +39,15 @@
 								
 									<div class="form-group">
 										<label>Story Name:</label>
-										<form:input type="text" class="form-control" path="chapterTitle"/>
+										<form:input type="text" class="form-control" path="chapterTitle"  required="required"/>
 									</div>
 									<div class="form-group">
 										<label>Chapter Number:</label>
-										<form:input type="text" class="form-control" path="chapterNumber"/>
+										<form:input type="number" class="form-control" path="chapterNumber"  required="required"/>
 									</div>
 									<div class="form-group">
 										<label>Description:</label>
-										<form:textarea class="form-control" path="content"
+										<form:textarea class="form-control" path="content"  required="required"
 											rows="4" />
 									</div>
 									<div class="form-group">

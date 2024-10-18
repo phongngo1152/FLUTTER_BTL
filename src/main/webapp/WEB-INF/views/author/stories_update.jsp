@@ -61,19 +61,19 @@
 									action="${pageContext.request.contextPath}/author/updateStory"
 									modelAttribute="story" method="post"
 									enctype="multipart/form-data">
-									<form:input type="text" path="storyId" value="${idurl }" hidden="hidden" class="form-control" />
+									<form:input type="text" path="storyId" value="${idurl }" hidden="hidden" class="form-control" required="required"/>
 									<div class="form-group">
 										<label for="title">Story Title:</label>
-										<form:input type="text" path="title" class="form-control" />
+										<form:input type="text" path="title" class="form-control" required="required" />
 									</div>
 									<div class="form-group">
 										<label for="description">Description:</label>
-										<form:textarea path="description" class="form-control"
+										<form:textarea path="description" class="form-control" required="required"
 											rows="3" />
 									</div>
 									<div class="form-group">
 										<label for="coverImage">Cover Image:</label> <input
-											type="file" class="form-control" name="coverImageFile" />
+											type="file" class="form-control" name="coverImageFile"  />
 
 										<!-- Hiển thị ảnh cũ nếu có -->
 										<c:if test="${not empty story.coverImage}">
@@ -85,7 +85,7 @@
 									<!-- Các trường Category và Author -->
 									<div class="form-group">
 										<label for="category">Category:</label>
-										<form:select path="category.categoryId" class="form-control">
+										<form:select path="category.categoryId" class="form-control" required="required">
 											<option selected="selected" value=''>--- Choose
 												catrgory ---</option>
 											<form:options items="${listcate }" itemLabel="name"
@@ -93,10 +93,10 @@
 										</form:select>
 									</div>
 									<div class="form-group">
-										<label for="author">Author:</label>
-										<form:select path="author.authorId" class="form-control">
+										<label for="author">Stage name:</label>
+										<form:select path="author.authorId" class="form-control" required="required">
 											<option selected="selected" value=''>--- Choose
-												author ---</option>
+												Stage name ---</option>
 											<form:options items="${listauthor }" itemLabel="name"
 												itemValue="authorId"></form:options>
 										</form:select>

@@ -37,7 +37,7 @@
 							<div class="iq-card-body">
 										<div class="form-group">
 										<label for="description">Content:</label>
-										<textarea class="form-control" disable="disable" 
+										<textarea class="form-control" disabled="disabled" 
 											rows="3" disabled="disabled">${cmtId.content }</textarea> 
 									</div>
 							</div>

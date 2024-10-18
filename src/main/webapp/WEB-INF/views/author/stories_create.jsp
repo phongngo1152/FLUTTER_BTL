@@ -39,22 +39,22 @@
 									enctype="multipart/form-data">
 									<div class="form-group">
 										<label>Story Name:</label>
-										<form:input type="text" class="form-control" path="title"/>
+										<form:input type="text" class="form-control" path="title" required="required"/>
 									</div>
 									<div class="form-group">
 										<label>Category:</label>
-										<form:select path="category.categoryId" class="form-control">
-											<option selected="selected" value=''>--- Choose
+										<form:select path="category.categoryId" class="form-control" required="required">
+											<option selected="selected" value='' >--- Choose
 												catrgory ---</option>
 											<form:options items="${listcate }" itemLabel="name"
 												itemValue="categoryId"></form:options>
 										</form:select>
 									</div>
 									<div class="form-group">
-										<label>Category:</label>
-										<form:select path="author.authorId" class="form-control">
+										<label>Stage name:</label>
+										<form:select path="author.authorId" class="form-control" required="required">
 											<option selected="selected" value=''>--- Choose
-												author ---</option>
+												Stage name ---</option>
 											<form:options items="${listauthor }" itemLabel="name"
 												itemValue="authorId"></form:options>
 										</form:select>
@@ -62,12 +62,12 @@
 									<div class="form-group">
 										<label>Image:</label>
 										<div class="custom-file">
-											<input type="file" name="coverImageFile" />
+											<input type="file" name="coverImageFile" required="required" />
 										</div>
 									</div>
 									<div class="form-group">
 										<label>Description:</label>
-										<form:textarea class="form-control" path="description"
+										<form:textarea class="form-control" path="description" required="required"
 											rows="4" />
 									</div>
 									<div class="form-group">

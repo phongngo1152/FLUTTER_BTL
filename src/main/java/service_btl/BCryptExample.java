@@ -7,7 +7,7 @@ public class BCryptExample {
     public static void main(String[] args) {
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-        String rawPassword = "123456";
+        String rawPassword = "thuy";
 
         String encodedPassword = passwordEncoder.encode(rawPassword);
 

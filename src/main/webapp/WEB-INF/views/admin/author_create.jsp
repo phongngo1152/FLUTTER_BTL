@@ -38,18 +38,18 @@
 									method="post">
 									<div class="form-group">
 										<label>Author Name:</label>
-										<form:input type="text" class="form-control" path="userName" />
+										<form:input type="text" class="form-control" path="userName" required='required' />
 									</div>
 									<div class="form-group">
 										<label>Email:</label>
-										<form:input type="text" class="form-control" path="email" />
+										<form:input type="text" class="form-control" path="email" required='required' />
 									</div>
 									<div class="form-group">
 										<label>Password:</label>
-										<form:input type="text" class="form-control" path="password" />
+										<form:input type="text" class="form-control" path="password" required='required' />
 									</div>
 									<div class="form-group">
-										<form:input type="text" class="form-control" path="role" value="1" />
+										<form:input type="text" class="form-control" path="role" value="1" hidden='hidden' />
 									</div>
 									<div class="form-group">
 										<label>Status:</label>

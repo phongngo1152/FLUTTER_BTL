@@ -43,11 +43,11 @@
 									
 									<div class="form-group">
 										<label for="title">Story Title:</label>
-										<form:input type="text" path="title" class="form-control" disabled="disabled" />
+										<form:input type="text" path="title" class="form-control" readonly="true"/>
 									</div>
 									<div class="form-group">
 										<label for="description">Description:</label>
-										<form:textarea path="description" class="form-control" disabled="disabled"
+										<form:textarea path="description" class="form-control" disabled="true"
 											rows="3" />
 									</div>
 									<div class="form-group">
@@ -108,8 +108,8 @@
 													<td>
 														<div class="flex align-items-center list-user-action">
 															<a class="bg-primary" data-toggle="tooltip"
-																data-placement="top" title="" data-original-title="Edit"
-																href="${pageContext.request.contextPath}/admin/comments/${c.story.storyId}/detail-${c.chapterId }"><i class="ri-eye-line"></i></a>
+																data-placement="top" title="" data-original-title="Show comment"
+																href="${pageContext.request.contextPath}/admin/comments"><i class="ri-eye-line"></i></a>
 															
 														</div>
 													</td>
@@ -132,6 +132,11 @@
 		</div>
 	</div>
 	<!-- Optional JavaScript -->
+	<script>
+    document.getElementById('userName').addEventListener('keydown', function(e) {
+        e.preventDefault(); // Chặn người dùng nhập liệu
+    });
+</script>
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
 </body>

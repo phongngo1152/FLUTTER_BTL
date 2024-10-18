@@ -11,6 +11,9 @@
 	content="width=device-width, initial-scale=1, shrink-to-fit=no">
 <title>Bookstore</title>
 <jsp:include page="../linkcss.jsp"></jsp:include>
+
+<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@taglib prefix="form" uri="http://www.springframework.org/tags/form"%>
 </head>
 <body>
 		<!-- loader Start -->
@@ -33,29 +36,34 @@
                            </div>
                         </div>
                         <div class="iq-card-body">
-                           <form action="https://templates.iqonic.design/booksto/html/admin-author.html">
-                              <div class="form-group">
-                                 <label>Author Name:</label>
-                                 <input type="text" class="form-control">
-                              </div>
-                              <div class="form-group">
-                                 <label>Author Profile:</label>
-                                 <div class="custom-file">
-                                    <input type="file" class="custom-file-input" id="customFile">
-                                    <label class="custom-file-label" for="customFile">Choose file</label>
-                                 </div>
-                              </div>
-                              <div class="form-group">
-                                 <label>Author Email:</label>
-                                 <input type="email" class="form-control">
-                              </div>
-                              <div class="form-group">
-                                 <label>Author Description:</label>
-                                 <textarea class="form-control" rows="4"></textarea>
-                              </div>
-                              <button type="submit" class="btn btn-primary">Submit</button>
-                              <button type="reset" class="btn btn-danger">Reset</button>
-                           </form>
+                          <form:form action="${pageContext.request.contextPath}/admin/saveStatusAuthor" modelAttribute="acc"
+									method="post">
+									<form:input type="text" class="form-control" path="acId" value="${id }" hidden="hidden"/>
+									<div class="form-group">
+										<label>Author Name:</label>
+										<form:input type="text" class="form-control" path="userName" disabled="true" />
+									</div>
+									<div class="form-group">
+										<label>Email:</label>
+										<form:input type="text" class="form-control" path="email" disabled="true"/>
+									</div>
+									<div class="form-group">
+										<label>Password:</label>
+										<form:input type="password" class="form-control" path="password" disabled="true"/>
+									</div>
+									<div class="form-group">
+										<form:input type="text" class="form-control" path="role" value="1" hidden="hidden"  />
+									</div>
+									<div class="form-group">
+										<label>Status:</label>
+										<form:radiobutton path="status" value="1" checked="checked" />
+										Display
+										<form:radiobutton path="status" value="0" />
+										Hidden
+									</div>
+									<button type="submit" class="btn btn-primary">Submit</button>
+									<button type="reset" class="btn btn-danger">Reset</button>
+								</form:form>
                         </div>
                      </div>
                   </div>
@@ -64,8 +72,10 @@
          </div>
 	</div>
 	 <!-- Optional JavaScript -->
+	
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
+	
 </body>
 
 <!-- Mirrored from templates.iqonic.design/booksto/html/sign-in.html by HTTrack Website Copier/3.x [XR&CO'2014], Tue, 30 Apr 2024 20:47:07 GMT -->

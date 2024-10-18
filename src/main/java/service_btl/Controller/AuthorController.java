@@ -436,7 +436,7 @@ public class AuthorController {
 		model.addAttribute("cmt", cmt);
 		model.addAttribute("cmtId", cmtId);
 		model.addAttribute("storyId", storyId);
-		return "author/comment_list";
+		return "author/comment_detail";
 	}
 
 

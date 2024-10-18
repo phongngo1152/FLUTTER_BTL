@@ -118,9 +118,8 @@ public class AdminController {
 		accountDao.insertUser(acc);
 		return "redirect:/admin/authors";
 	}
-
-	@RequestMapping(value = "/author-update")
-	public String updateAuthor(HttpSession session) {
+	@GetMapping("/editAuthorStatus/{id}")
+	public String editStatusAuthor(Model model, @PathVariable("id") Integer id, HttpSession session) {
 		Account account = (Account) session.getAttribute("account");
 
         // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
@@ -132,7 +131,30 @@ public class AdminController {
         if (account.getRole() != 0) {
             return "redirect:/err500"; // Chuyển hướng nếu không phải admin
         }
-		return "admin/author_update"; // Trả về trang cập nhật tác giả
+        Account acc = accountDao.findByUserId(id);
+        if (acc == null) {
+        	return "notfound";
+        }
+        model.addAttribute("acc",acc);
+        model.addAttribute("id",id);
+		return "admin/author_update";
+	}
+	@PostMapping("/saveStatusAuthor")
+	public String saveStatusAuthor(@ModelAttribute("acc") Account acc, HttpSession session) {
+		Account account = (Account) session.getAttribute("account");
+        // Kiểm tra nếu tài khoản chưa đăng nhập (account == null)
+        if (account == null) {
+            return "redirect:/login"; // Chuyển hướng đến trang đăng nhập nếu chưa đăng nhập
+        }
+
+        // Kiểm tra role (giả sử 0 là admin, 1 là author)
+        if (account.getRole() != 0) {
+            return "redirect:/err500"; // Chuyển hướng nếu không phải admin
+        }
+		acc.setCreateAt(new Date());
+		acc.setUpdateAt(new Date());
+		accountDao.updateStatus(acc);
+		return "redirect:/admin/authors";
 	}
 
 	//
@@ -341,7 +363,8 @@ public class AdminController {
 		}
 		return "redirect:/admin/stories"; // Redirect nếu có lỗi
 	}
-
+	
+	
 
 	@RequestMapping(value = "comments/{id}/detail-{cmtI}")
 	public String commentDetail(Model model, HttpSession session, @PathVariable("id") Integer id,@PathVariable("cmtI") Integer cmtI) {

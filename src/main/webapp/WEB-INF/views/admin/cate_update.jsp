@@ -38,7 +38,7 @@
                            <form:input type="text" class="form-control" path="categoryId" hidden= "hidden"/>
                               <div class="form-group">
                                  <label>Category Name:</label>
-                                 <form:input type="text" class="form-control" path="name" />
+                                 <form:input type="text" class="form-control" path="name"   />
                               </div>
                               <div class="form-group">
                                  <label>Category Description:</label>
@@ -58,6 +58,11 @@
                </div>
             </div>
          </div>
+         <script>
+    document.getElementById('name').addEventListener('keydown', function(e) {
+        e.preventDefault(); // Chặn người dùng nhập liệu
+    });
+</script>
 	<!-- jQuery first, then Popper.js, then Bootstrap JS -->
 	<jsp:include page="../linkjs.jsp"></jsp:include>
 </body>

@@ -60,8 +60,7 @@
                                        <td>${a.status == 1? "Active" : "Off" }</td>
                                        <td>
                                           <div class="flex align-items-center list-user-action">
-                                             <a class="bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="admin-add-category.html"><i class="ri-pencil-line"></i></a>
-                                             <a class="bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Delete" href="#"><i class="ri-delete-bin-line"></i></a>
+                                             <a class="bg-primary" data-toggle="tooltip" data-placement="top" title="" data-original-title="Edit" href="${pageContext.request.contextPath}/admin/editAuthorStatus/${a.acId }"><i class="ri-pencil-line"></i></a>
                                           </div>
                                        </td>
                                     </tr>

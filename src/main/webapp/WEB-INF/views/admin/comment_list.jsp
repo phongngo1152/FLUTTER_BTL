@@ -58,7 +58,7 @@
 														<div class="flex align-items-center list-user-action">
 															<a class="bg-primary" data-toggle="tooltip"
 																data-placement="top" title="" data-original-title="Detail"
-																href="${pageContext.request.contextPath}/admin/${c.story.storyId}/comments/detail-${c.commentId }"><i class="ri-eye-line"></i></a>
+																href="${pageContext.request.contextPath}/admin/comments/${c.story.storyId}/detail-${c.commentId }"><i class="ri-eye-line"></i></a>
 															
 														</div>
 													</td>
