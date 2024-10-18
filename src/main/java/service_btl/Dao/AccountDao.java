@@ -24,4 +24,6 @@ public interface AccountDao {
 	public List<Account> getAccbyrRole(Integer role);
 
 	public Account checklogin(String username, String password);
+	
+	public boolean updateStatus(Account account);
 }

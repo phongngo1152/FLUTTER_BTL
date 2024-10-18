@@ -38,11 +38,11 @@
 									method="post">
 									<div class="form-group">
 										<label>Category Name:</label>
-										<form:input type="text" class="form-control" path="name" />
+										<form:input type="text" class="form-control" path="name" required="required" />
 									</div>
 									<div class="form-group">
 										<label>Category Description:</label>
-										<form:textarea class="form-control" rows="4"
+										<form:textarea class="form-control" required="required" rows="4"
 											path="description"></form:textarea>
 									</div>
 									<div class="form-group">

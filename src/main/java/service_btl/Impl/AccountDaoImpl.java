@@ -179,5 +179,23 @@ public class AccountDaoImpl implements AccountDao {
 		}
 		return null;
 	}
-
+	@Override
+	public boolean updateStatus(Account account) {
+		SessionFactory sessionFactory = HibernateUtil.getSessionFactory();
+		Session session = sessionFactory.openSession();
+		account.setStatus(0);
+		try {
+			session.beginTransaction();
+			session.update(account);
+			session.getTransaction().commit();
+			return true;
+		} catch (Exception e) {
+			System.out.println("Loi bat dau tu day");
+			e.printStackTrace();
+			session.getTransaction().rollback();
+		} finally {
+			session.close();
+		}
+		return false;
+	}
 }
